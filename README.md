@@ -20,6 +20,8 @@ This GUI Was Created By 05Konz And Is Maintained And Updated By Xullys.
 I AM NOT RESPONSIBLE FOR ANY ACTION TAKEN AGAINST YOU / YOUR BLOOKET ACCOUNT.
 PLEASE USE RESPONIBLY!!!
 
+### ⭐ PLEASE STAR THE REPO ⭐
+
 ## 🧰 Cheats List
 
 ### 🎯 Global Cheats
