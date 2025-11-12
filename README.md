@@ -12,7 +12,8 @@
 ## OPTION 2; BROWSER CONSOLE
 1. Right-Click The Page And Select "INSPECT"
 2. Paste The Code From The X-GUI.JS File
-3. Voila!
+3. Navigate To "Console"
+4. Voila!
 ## OPTION 3; BOOKMARKLET
 1. Right Click Your Bookmarks Bar And Select "Add Page"
 2. Copy The Code From X-GUI.MIN.JS And Paste It Into The URL Bar
