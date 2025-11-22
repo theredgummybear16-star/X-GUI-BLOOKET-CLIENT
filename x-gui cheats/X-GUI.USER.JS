@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X-GUI CLIENT FOR BLOOKET
 // @namespace    http://tampermonkey.net/
-// @version      5.20x
+// @version      6.10x
 // @description  NOT PATCHED ANYMORE, THE BEST GUI ON THE WEB! ADVANCED ANTIBAN AND TONS OF FEATURES {CHEAT} {HACK} {CLIENT}
 // @author       You
 // @run-at       document-end
@@ -106,7 +106,7 @@
           transition: left 0.3s, background 0.3s;
         " id="xgui_knob"></div>
       </div>
-      Don't show again on all Blooket pages
+      Don't show again on all Blooket pages 😝
     </label>
   `;
 
@@ -173,7 +173,7 @@
     const timeProcessed = 1747005941679;
     let latestProcess = -1;
     const cheat = (async () => {
-        const versionName = "5.20x";
+        const versionName = "6.10x";
         const gui = document.createElement("div");
         Object.assign(gui.style, {
             top: window.innerHeight / 2 - 250 + "px",
@@ -967,6 +967,7 @@
                         },
                     },
                     {
+
                         name: "Freeze Leaderboard",
             description: "Freezes the leaderboard on the host's screen",
             type: "toggle",
@@ -991,6 +992,50 @@
                 }
             }
         }, {
+                    name: "Anti Kick",
+        description: "Prevents the host from kicking you, Although cheats stop working and you can't win.",
+        type: "toggle",
+        enabled: false,
+        data: null,
+        run: function () {
+            const stateNode = getStateNode();
+            const lgc = stateNode?.props?.liveGameController;
+
+            if (!lgc) return alert("Not in a game.");
+
+            if (!this.enabled) {
+                // TURN ON
+                this.enabled = true;
+
+                const playerName = stateNode.props.client.name;
+                const savedBlook = stateNode.props.client.blook;
+
+                this.data = setInterval(() => {
+                    lgc.getDatabaseRef("c").once("value", (snap) => {
+                        const players = snap.val() || {};
+
+                        // Host kicked you → your entry removed
+                        if (!players[playerName]) {
+                            lgc.setVal({
+                                path: `c/${playerName}`,
+                                val: {
+                                    n: playerName,
+                                    b: savedBlook
+                                }
+                            });
+                        }
+                    });
+                }, 500);
+
+            } else {
+                // TURN OFF
+                this.enabled = false;
+                clearInterval(this.data);
+                this.data = null;
+            }
+        }
+    }, {
+
                         name: "Percent Auto Answer",
                         description: "Answers questions correctly or incorrectly depending on the goal grade given (Disable and re-enable to update goal)",
                         inputs: [
@@ -1640,7 +1685,8 @@
             },
             // === START: extras category to add into the 'cheats' object ===
 extras: {
-  img: "https://png.pngtree.com/png-vector/20231116/ourmid/pngtree-the-rise-of-gradient-star-png-image_10450195.png",
+  img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBvbHlnb24gZmlsbD0iI2ZkZDAyOSIgcG9pbnRzPSIxMjAsMTggMTUxLDk0IDI0MCw5NCAxNjgsMTQ4IDE5NSwyMzAgMTIwLDE4MyA0NSwyMzAgNzIsMTQ4IDAsOTQgODksOTQiLz48L3N2Zz4=",
+
   name: "Extras",
   cheats: [
     {
@@ -4350,6 +4396,163 @@ extras: {
         const creditsPage = document.createElement("div");
         creditsPage.className = classes.creditsPage;
 
+        const mobilePage = document.createElement("div")
+        mobilePage.className = classes.mobilePage;
+        // ====================== FINAL MOBILE MODE SYSTEM (FULL BLOCK) ===========================
+(function () {
+
+    if (!gui) return;
+
+    // ===== Universal storage key so it works on ALL Blooket subdomains =====
+    const MOBILE_KEY = "XGUI_MOBILE_MODE_ENABLED";
+
+    let exitBtn = null;
+
+    // ===== Inject Mobile CSS =====
+    const mobileCSS = document.createElement("style");
+    mobileCSS.innerHTML = `
+        /* =================== MOBILE MODE SIDEBAR =================== */
+
+        body.xgui-mobile-mode .X-Gui-sidebar {
+            width: 70px !important;
+            overflow: hidden !important;
+
+            /* Center icons cleanly */
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 22px !important;
+
+            padding-top: 20px !important;
+            padding-bottom: 20px !important;
+        }
+
+        body.xgui-mobile-mode .X-Gui-sidebar:hover {
+            width: 70px !important;
+        }
+
+        body.xgui-mobile-mode .X-Gui-sidebar span {
+            display: none !important;
+        }
+
+        body.xgui-mobile-mode .X-Gui-sidebar::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        /* =================== CONTENT AREA =================== */
+        body.xgui-mobile-mode .X-Gui-content {
+            overflow-y: auto !important;
+            max-height: calc(100% - 45px) !important;
+            padding-right: 10px !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+        }
+
+        /* =================== GAMEMODE PAGE TEXT FIX =================== */
+
+        body.xgui-mobile-mode .setting,
+        body.xgui-mobile-mode .setting > *,
+        body.xgui-mobile-mode .setting-row,
+        body.xgui-mobile-mode .setting-row > * {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            line-height: 1.25 !important;
+        }
+
+        /* Stack multi-column setting rows vertically in mobile */
+        body.xgui-mobile-mode .setting {
+            display: block !important;
+        }
+    `;
+    document.head.appendChild(mobileCSS);
+
+    // ========================= ENABLE MOBILE MODE =========================
+    function enableMobile() {
+
+        // save state across all blooket subdomains
+        localStorage.setItem(MOBILE_KEY, "true");
+
+        gui.dataset.mobileMode = "true";
+        document.body.classList.add("xgui-mobile-mode");
+
+        // Save original values once
+        if (!gui._mobileOrig) {
+            gui._mobileOrig = {
+                width: gui.style.width,
+                contentLeft: guiContent.style.left
+            };
+        }
+
+        // Perfect mobile width
+        gui.style.width = "430px";
+        guiContent.style.left = "75px";
+
+        // Hide header
+        if (bigTextContainer) bigTextContainer.style.display = "none";
+
+        // Exit button
+        if (!exitBtn) {
+            exitBtn = document.createElement("div");
+            exitBtn.innerText = "Exit Mobile Mode";
+            exitBtn.style.cssText = `
+                margin: 12px;
+                padding: 10px 12px;
+                width: fit-content;
+                background: #d33;
+                color: white;
+                font-weight: 700;
+                border-radius: 8px;
+                cursor: pointer;
+            `;
+            exitBtn.onclick = disableMobile;
+            mobilePage.appendChild(exitBtn);
+        } else {
+            exitBtn.style.display = "block";
+        }
+    }
+
+    // ========================= DISABLE MOBILE MODE =========================
+    function disableMobile() {
+
+        // remove saved state
+        localStorage.removeItem(MOBILE_KEY);
+
+        gui.dataset.mobileMode = "false";
+        document.body.classList.remove("xgui-mobile-mode");
+
+        // Restore original UI
+        if (gui._mobileOrig) {
+            gui.style.width = gui._mobileOrig.width;
+            guiContent.style.left = gui._mobileOrig.contentLeft;
+        }
+
+        if (bigTextContainer) bigTextContainer.style.display = "";
+
+        if (exitBtn) exitBtn.style.display = "none";
+    }
+
+    // ========================= AUTO-LOAD MOBILE MODE =========================
+    if (localStorage.getItem(MOBILE_KEY) === "true") {
+        setTimeout(() => enableMobile(), 50);
+    }
+
+    // ========================= SIDEBAR NAV ACTIVATION =========================
+    mobilePage.onPath = function () {
+        enableMobile();
+    };
+
+    // Optional public toggle
+    gui.toggleMobileMode = function () {
+        if (gui.dataset.mobileMode === "true") disableMobile();
+        else enableMobile();
+    };
+
+})();
+
+
         const licenseMessage = document.createElement("div");
         licenseMessage.className = classes.licenseMessage;
         licenseMessage.innerHTML = `<i class="fas fa-file-alt" style="line-height: 1;aspect-ratio: 1 / 1;height: 20px;display: inline-grid;place-items: center;"></i> This script is licensed under <a style="color: var(--highlight);" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPL-3.0</a>, read more <a style="color: var(--highlight);" target="_blank" href="https://github.com/Blooket-Council/Blooket-Cheats?tab=readme-ov-file#licensing">here</a>.<br>`;
@@ -4746,32 +4949,177 @@ extras: {
         const sidebarPaths = document.createElement("div");
         sidebarPaths.className = classes.sidebarPaths;
 
-        function createSidebarPath(name, icon, page) {
-            const sidebarPath = document.createElement("div");
-            sidebarPath.className = classes.sidebarPath;
+        function createSidebarPath(name, iconKey, page) {
+  const sidebarPath = document.createElement("div");
+  sidebarPath.className = classes.sidebarPath;
 
-            const iconImg = document.createElement("i");
-            iconImg.className = icon;
+  // Clean and consistent spacing
+  sidebarPath.style.display = "flex";
+  sidebarPath.style.alignItems = "center";
+  sidebarPath.style.gap = "12px";
+  sidebarPath.style.cursor = "pointer";
 
-            const pathName = document.createElement("span");
-            pathName.innerText = name;
+  // Icon wrapper — matches your original 50×50 FA container
+  const iconWrapper = document.createElement("div");
+  iconWrapper.style.width = "50px";
+  iconWrapper.style.height = "50px";
+  iconWrapper.style.display = "flex";
+  iconWrapper.style.alignItems = "center";
+  iconWrapper.style.justifyContent = "center";
+  iconWrapper.style.flexShrink = "0";
+  iconWrapper.style.fontSize = "1.5em"; // 1.5em scaling matches FA behavior
 
-            sidebarPath.append(iconImg, pathName);
+  // --- CSP-SAFE SVG ICON SET (OUTLINE STYLE) ---
+  const svgMap = {
+    search: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/>
+        <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+      </svg>`,
 
-            sidebarPath.onclick = () => path.sidebar(name, page);
+    gamepad: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="8" width="20" height="8" rx="2"></rect>
+        <path d="M7 12h4M9 10v4"></path>
+      </svg>`,
 
-            sidebarPaths.append(sidebarPath);
+    star: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.2 6.7L22 9.3l-5 4.3L18.4 22 12 18.3 5.6 22 7 13.6 2 9.3l6.8-.6L12 2z"/>
+      </svg>`,
 
-            return sidebarPath;
-        }
+    trophy: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 21h8M8 17v4M16 17v4"/>
+        <path d="M7 3h10v4a5 5 0 01-10 0V3z"/>
+      </svg>`,
 
-        createSidebarPath("Search", "fas fa-search", searchPage);
-        createSidebarPath("Gamemodes", "fas fa-gamepad", gamemodesPage);
-        createSidebarPath("Favorites", "fas fa-star", favoritesPage);
-        (leaderboardPath = createSidebarPath("Leaderboard", "fas fa-trophy", leaderboardPage)).style.display = "none";
-        createSidebarPath("Logs", "fas fa-terminal", logsPage);
-        createSidebarPath("Settings", "fas fa-cog", settingsPage);
-        createSidebarPath("Credits", "fas fa-code", creditsPage);
+    terminal: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 17 10 11 4 5"/>
+        <line x1="12" y1="19" x2="20" y2="19"/>
+      </svg>`,
+
+    // === NEW PERFECT OUTLINE COG ===
+    cog: `
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="1em" height="1em"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     preserveAspectRatio="xMidYMid meet">
+
+  <!-- center gear circle -->
+  <circle cx="12" cy="12" r="3"></circle>
+
+  <!-- 6 symmetrical gear arms (perfect hex geometry, zero distortion) -->
+  <path d="
+    M12 2.5
+    l1.2 .3
+    a2 2 0 0 1 1.4 1.4l.3 1.2
+    1.7.7
+    a2 2 0 0 1 1 1l.7 1.7
+    1.2.3
+    a2 2 0 0 1 1.4 1.4l.3 1.2
+    -.3 1.2
+    a2 2 0 0 1 -1.4 1.4l-1.2.3
+    -.7 1.7
+    a2 2 0 0 1 -1 1l-1.7.7
+    -.3 1.2
+    a2 2 0 0 1 -1.4 1.4l-1.2.3
+    -1.2-.3
+    a2 2 0 0 1 -1.4 -1.4l-.3 -1.2
+    -1.7 -.7
+    a2 2 0 0 1 -1 -1l-.7 -1.7
+    -1.2 -.3
+    a2 2 0 0 1 -1.4 -1.4L2.5 12
+    l.3 -1.2
+    a2 2 0 0 1 1.4 -1.4l1.2 -.3
+    .7 -1.7
+    a2 2 0 0 1 1 -1l1.7 -.7
+    .3 -1.2
+    a2 2 0 0 1 1.4 -1.4l1.2 -.3Z" />
+</svg>
+`,
+
+
+    mobile: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+        <circle cx="12" cy="18" r="1" fill="currentColor"></circle>
+      </svg>`,
+
+    code: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
+      </svg>`,
+
+    default: `
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24" width="1em" height="1em"
+           fill="currentColor">
+        <circle cx="12" cy="12" r="8"/>
+      </svg>`
+  };
+
+  // Insert the SVG into the wrapper
+  iconWrapper.innerHTML = svgMap[iconKey] || svgMap.default;
+
+  // Clean block rendering inside wrapper
+  const svg = iconWrapper.querySelector("svg");
+  if (svg) {
+    svg.style.display = "block";
+  }
+
+  const label = document.createElement("span");
+  label.innerText = name;
+
+  sidebarPath.append(iconWrapper, label);
+
+  sidebarPath.onclick = () => path.sidebar(name, page);
+
+  sidebarPaths.append(sidebarPath);
+
+  return sidebarPath;
+}
+createSidebarPath("Search", "search", searchPage);
+createSidebarPath("Gamemodes", "gamepad", gamemodesPage);
+createSidebarPath("Favorites", "star", favoritesPage);
+
+// Hidden leaderboard entry stays exactly as you had it
+(leaderboardPath = createSidebarPath("Leaderboard", "trophy", leaderboardPage)).style.display = "none";
+
+createSidebarPath("Logs", "terminal", logsPage);
+createSidebarPath("Settings", "cog", settingsPage);
+createSidebarPath("Mobile Mode", "mobile", mobilePage);
+createSidebarPath("Credits", "code", creditsPage);
+
+
 
         sidebar.append(sidebarPaths);
 
@@ -4807,7 +5155,7 @@ extras: {
         path.updatePath();
         document.body.appendChild(gui);
 
-        Logs.addLog("Opened XULL-GUI");
+        Logs.addLog("Opened X-GUI!");
         /* Anti-Suspend By CryptoDude3 */
         if (window.fetch.call.toString() == "function call() { [native code] }") {
             const call = window.fetch.call;
@@ -4815,7 +5163,7 @@ extras: {
                 if (!arguments[1].includes("s.blooket.com/rc")) return call.apply(this, arguments);
                 Logs.addLog("Blocked Suspension API!", "red");
             };
-            Logs.addLog("Enabled Anti-Suspend");
+            Logs.addLog("Enabled Anti-BAN!");
         }
 
         if (gui.querySelector("i").clientHeight == 0) {
@@ -4912,6 +5260,7 @@ extras: {
                 })()
             )[1].children[0]._owner.stateNode;
         }
+
 
         window.addEventListener("keydown", keydown);
 
