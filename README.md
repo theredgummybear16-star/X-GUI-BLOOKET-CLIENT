@@ -56,7 +56,7 @@ PLEASE USE RESPONIBLY!!!
 * Free Player Slots
 * Freeze Leaderboard
 
-### GOLD QUEST 
+### 💰 GOLD QUEST 
 - **Always Triple**
 - **Always Quintuple**
 - **Auto Choose**
