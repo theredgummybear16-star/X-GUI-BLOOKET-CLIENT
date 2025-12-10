@@ -1,4 +1,6 @@
- /**
+
+
+    /**
  * @license AGPL-3.0
  * Blooket Cheats
  * Copyright (C) 2023-present 05Konz/Xullys
@@ -21,7 +23,6 @@
 */
 
 /* THE UPDATE CHECKER IS ADDED DURING COMMIT PREP, THERE MAY BE REDUNDANT CODE, DO NOT TOUCH */
-
 (() => {
     let iframe = document.querySelector("iframe");
     if (!iframe) {
@@ -404,191 +405,103 @@ closeControl.innerHTML = `
 closeControl.onclick = () => gui.remove();
 
 controls.append(moveControl, minimizeControl, closeControl);
-        /* === X-GUI: FOOLPROOF PERSIST & RESTORE (v3) ===
-   Paste THIS BLOCK IMMEDIATELY BEFORE:
-       dragElement(moveControl, gui);
-   It restores position AND minimized state (choice C), clamps to viewport,
-   and saves after drag/minimize — without changing your existing logic.
-*/
-(function() {
-  try {
-    const COOKIE = "xgui_state_v3";
+       /* === XGUI UNIVERSAL PERSIST v4 (working across all subdomains, never breaks init) === */
+
+(function () {
+
+    const KEY = "xgui_state_v4";
     const COOKIE_OPTS = "; path=/; domain=.blooket.com; expires=Tue, 19 Jan 2038 03:14:07 GMT";
-    const SHIFT_ON_MINIMIZE = 678; // matches your minimize math: gui.style.left += 678
+    const SHIFT = 678; // your minimize left-shift
 
-    // --- cookie helpers ---
-    function setCookie(obj) {
-      try { document.cookie = COOKIE + "=" + encodeURIComponent(JSON.stringify(obj)) + COOKIE_OPTS; } catch {}
-    }
-    function getCookie() {
-      try {
-        const m = document.cookie.match(new RegExp('(?:^|; )' + COOKIE + '=([^;]*)'));
-        return m ? JSON.parse(decodeURIComponent(m[1])) : null;
-      } catch { return null; }
-    }
-
-    // --- numeric helpers ---
-    function toNum(v, fallback = 0) {
-      if (typeof v === "number" && isFinite(v)) return Math.round(v);
-      if (typeof v === "string") {
-        const n = parseInt(v);
-        return Number.isFinite(n) ? n : fallback;
-      }
-      return fallback;
-    }
-    function clamp(n, a, b) { return Math.min(Math.max(n, a), b); }
-
-    // --- compute and set canonical (non-minimized) position to save/restore ---
-    function saveStateDebounced(delay = 100) {
-      clearTimeout(saveStateDebounced._t);
-      saveStateDebounced._t = setTimeout(saveStateImmediate, delay);
-    }
-    function saveStateImmediate() {
-      try {
-        const rect = gui.getBoundingClientRect();
-        // Determine whether currently minimized per control flag (your code uses minimizeControl.minimized)
-        const isMin = !!(minimizeControl && minimizeControl.minimized);
-        // CanonicalLeft = if minimized: currentLeft - SHIFT_ON_MINIMIZE, else currentLeft
-        const curLeft = toNum(gui.style.left, Math.round(rect.left));
-        const curTop  = toNum(gui.style.top,  Math.round(rect.top));
-        const canonicalLeft = isMin ? curLeft - SHIFT_ON_MINIMIZE : curLeft;
-        setCookie({
-          left: Math.round(canonicalLeft),
-          top: Math.round(curTop),
-          minimized: !!isMin,
-          // store size in case someone changed it later (defensive)
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-          ts: Date.now()
-        });
-      } catch (e) { /* ignore */ }
+    // ---------------------------
+    // COOKIE HELPERS
+    // ---------------------------
+    function saveState(state) {
+        try {
+            document.cookie =
+                KEY + "=" + encodeURIComponent(JSON.stringify(state)) + COOKIE_OPTS;
+        } catch (e) {}
     }
 
-    // --- clamp gui into viewport with margin ---
-    function clampIntoView() {
-      try {
-        const rect = gui.getBoundingClientRect();
-        const margin = 8;
-        const maxLeft = Math.max(window.innerWidth - rect.width - margin, margin);
-        const maxTop  = Math.max(window.innerHeight - rect.height - margin, margin);
-        let left = toNum(gui.style.left, Math.round(rect.left));
-        let top  = toNum(gui.style.top,  Math.round(rect.top));
-        left = clamp(left, margin, maxLeft);
-        top  = clamp(top,  margin, maxTop);
-        gui.style.left = left + "px";
-        gui.style.top  = top  + "px";
-        return { left, top };
-      } catch (e) { return null; }
+    function loadState() {
+        try {
+            const m = document.cookie.match(new RegExp(KEY + "=([^;]+)"));
+            return m ? JSON.parse(decodeURIComponent(m[1])) : {};
+        } catch (e) { return {}; }
     }
 
-    // --- restore logic (runs immediately, before dragElement init) ---
-    (function restore() {
-      const s = getCookie();
-      if (!s) return;
+    // ---------------------------
+    // SAFE SAVE (always store NON-minimized coords)
+    // ---------------------------
+    function saveNow() {
+        try {
+            const rect = gui.getBoundingClientRect();
 
-      // Apply instantly with no transition so drag math initializes from correct baseline
-      try {
-        gui.style.transition = "none";
-        // set canonical left/top first (non-minimized)
-        if (typeof s.left === "number") gui.style.left = s.left + "px";
-        if (typeof s.top  === "number") gui.style.top  = s.top  + "px";
-        // if saved maximized (not minimized), attempt to restore size if user changed it previously
-        if (!s.minimized && typeof s.width === "number" && typeof s.height === "number") {
-          gui.style.width  = s.width + "px";
-          gui.style.height = s.height + "px";
+            const isMin = minimizeControl?.minimized || false;
+
+            let left = parseInt(gui.style.left) || rect.left;
+            let top = parseInt(gui.style.top) || rect.top;
+
+            // Canonicalize
+            if (isMin) left -= SHIFT;
+
+            saveState({
+                left,
+                top,
+                minimized: isMin
+            });
+        } catch (e) {}
+    }
+
+    // ---------------------------
+    // RESTORE AFTER GUI IS BUILT
+    // ---------------------------
+    (async function restore() {
+
+        // Wait until fully initialized (prevents GUI failing to load)
+        while (!gui || !minimizeControl || !moveControl || gui.children.length < 2) {
+            await new Promise(r => setTimeout(r, 25));
         }
 
-        // force layout so subsequent dragElement uses these values as the baseline
-        void gui.offsetHeight;
-      } catch (e) {}
+        const s = loadState();
+        if (!s.left && !s.top) return; // no saved state yet
 
-      // Delay re-enable of transitions to prevent animation glitches
-      setTimeout(() => { try { gui.style.transition = ""; } catch {} }, 140);
+        // Restore as FULL SIZE FIRST
+        gui.style.width = "800px";
+        gui.style.height = "500px";
+        gui.style.left = s.left + "px";
+        gui.style.top = s.top + "px";
 
-      // AFTER baseline is set, if saved state wants minimized, call the original onclick to run your minimize animation
-      setTimeout(() => {
-        try {
-          const sNow = getCookie(); // re-read (in case something changed during the small delay)
-          if (!sNow) return;
+        // Let layout settle
+        await new Promise(r => setTimeout(r, 20));
 
-          // If saved minimized = true -> ensure GUI becomes minimized (call your handler if needed)
-          if (sNow.minimized) {
-            if (minimizeControl && !minimizeControl.minimized) {
-              // call original onclick (preserves all your hide/animation logic)
-              try { minimizeControl.onclick && minimizeControl.onclick(); } catch (e) {}
-            }
-          } else {
-            // If cookie says NOT minimized but control is currently minimized, restore
-            if (minimizeControl && minimizeControl.minimized) {
-              try { minimizeControl.onclick && minimizeControl.onclick(); } catch (e) {}
-            }
-          }
+        // THEN minimize if needed
+        if (s.minimized) {
+            minimizeControl.onclick(); // run real animation
+        }
 
-          // After minimize/restore completed (animation 200ms in your code), clamp and canonicalize final position
-          setTimeout(() => {
-            // If minimized, your minimize handler shifts left by +SHIFT_ON_MINIMIZE relative to canonical
-            // clamp to viewport and if clamped, save corrected canonical left
-            clampIntoView();
-            // canonicalize & save
-            saveStateImmediate();
-          }, 260);
-        } catch (e) {}
-      }, 30);
     })();
 
-    // --- Hook into minimize to save canonical position after its animation finishes ---
-    if (minimizeControl) {
-      const orig = minimizeControl.onclick;
-      minimizeControl.onclick = function() {
-        try { orig && orig.apply(this, arguments); } catch(e) { try { orig && orig(arguments); } catch{} }
-        // wait until your minimize animation completes (200ms) then save
-        setTimeout(saveStateImmediate, 260);
-      };
-    }
 
-    // --- Hook into dragging: save at end of drag
-    // Note: we must not replace your dragElement; we only listen for pointer events on moveControl
-    if (moveControl) {
-      // pointerdown -> record; pointerup -> save
-      moveControl.addEventListener("pointerdown", function() {
-        // small guard to ignore stray early pointermoves: set ignoreUntil
-        saveStateDebounced(300); // ensure a save in case pointerdown didn't produce move
-      }, { passive: true });
+    // ---------------------------
+    // HOOK SAVE EVENTS
+    // ---------------------------
 
-      // save on pointerup globally (dragElement will release pointer on up)
-      document.addEventListener("pointerup", function() {
-        // Wait one frame so dragElement has finalized gui.style.left/top
-        setTimeout(saveStateDebounced, 0);
-      }, { passive: true });
-      // fallback mouseup
-      document.addEventListener("mouseup", function() { setTimeout(saveStateDebounced, 0); }, { passive: true });
-    }
+    // Wrap minimize button
+    const origMin = minimizeControl.onclick;
+    minimizeControl.onclick = function () {
+        origMin();
+        setTimeout(saveNow, 30);
+    };
 
-    // MutationObserver: if your code (or something else) changes style attribute, save it shortly
-    try {
-      const mo = new MutationObserver((recs) => {
-        for (const r of recs) if (r.attributeName === "style") { saveStateDebounced(120); break; }
-      });
-      mo.observe(gui, { attributes: true, attributeFilter: ["style"] });
-    } catch (e) {}
+    // Save after drag
+    document.addEventListener("pointerup", () => setTimeout(saveNow, 30));
 
-    // On window resize, clamp into view and save (prevents off-screen after resolution change)
-    window.addEventListener("resize", function() {
-      setTimeout(() => {
-        const fixed = clampIntoView();
-        if (fixed) saveStateDebounced(80);
-      }, 40);
-    });
+    // Save on exit
+    window.addEventListener("beforeunload", saveNow);
 
-    // Ensure we never persist closed: your closeControl already does gui.remove() — do nothing.
-
-    // Final safe-save on page unload
-    window.addEventListener("beforeunload", saveStateImmediate);
-
-  } catch (err) {
-    console.error("X-GUI persistence (v3) error:", err);
-  }
 })();
+
 
 dragElement(moveControl, gui);
 
