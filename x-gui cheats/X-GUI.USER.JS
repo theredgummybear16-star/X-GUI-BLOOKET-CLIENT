@@ -1639,6 +1639,19 @@ run: function() {
                 window.open(url, "_blank", "width=500,height=500,resizable=yes,scrollbars=yes,status=yes");
             }
         }, {
+               name: "Crash Game",
+            description: "Crashes the host's game",
+            run: function() {
+                var e = Object.values(function e(t = document.querySelector("#app")) {
+                        return Object.values(t)[1]?.children?.[0]?._owner.stateNode ? t : e(t.querySelector(":scope>div"))
+                    }
+                    ())[1].children[0]._owner.stateNode;
+                e.props.liveGameController.setVal({
+                    path: `c/${e.props.client.name}/b/toString`,
+                    val: "Crashed"
+                })
+            }
+        }, {
 
                         name: "Use Any Blook",
                         description: "Allows you to play as any blook",
