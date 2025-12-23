@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Source: https://github.com/Blooket-Council/Blooket-Cheats * EMAIL: 05konz994@gmail.com
- * Source: https://greasyfork.org/en/scripts/553301/versions/new * EMAIL slinkingfox@outlook.com
+ * Source: https://greasyfork.org/en/scripts/553301/ * EMAIL: slinkingfox@outlook.com
+ * Source: https://github.com/xgui-client/x-gui-blooket-client * EMAIL: slinkingfox@outlook.com
 
 */
 
