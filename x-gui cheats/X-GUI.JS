@@ -1,4 +1,5 @@
 
+
     /**
  * @license AGPL-3.0
  * Blooket Cheats
@@ -156,7 +157,49 @@ button,
     border-radius: 12px !important;
 }
 
-.controls,.credit,.gamemodesList,.guiContent,.guiTopBar,.sidebar,.sidebarShadow,.version{position:absolute}.sidebarShadow{inset:0;background:#000;opacity:0%;pointer-events:none;transition:.2s;z-index:9}.controls>div,.guiContent,.sidebar,select[data-type] option{background:var(--background2)}.sidebarShadow:has(~ .sidebar:hover){opacity:40%}.credit{bottom:0;left:0;right:0;height:0;transition:.1s;overflow:hidden;text-align:center}.sidebar{top:0;left:0;height:100%;width:50px;transition:.2s 0.1s;z-index:10;overflow-x:hidden;overflow-y:hidden;padding-bottom:30px}
+.controls,.credit,.gamemodesList,.guiContent,.guiTopBar,.sidebar,.sidebarShadow,.version{position:absolute}.sidebarShadow{inset:0;background:#000;opacity:0%;pointer-events:none;transition:.2s;z-index:9}.controls>div,.guiContent,.sidebar,select[data-type] option{background:var(--background2)}.sidebarShadow:has(~ .sidebar:hover){opacity:40%}.credit{bottom:0;left:0;right:0;height:0;transition:.1s;overflow:hidden;text-align:center}.sidebar {
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50px;
+
+  /* ORIGINAL POSITIONING */
+  position: absolute;
+  z-index: 10;
+
+  /* visuals */
+  background: var(--background2);
+  box-sizing: border-box;
+  padding-bottom: 30px;
+
+  /* animation */
+  transition: width .2s .1s;
+
+  /* COLLAPSED */
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* EXPANDED */
+.sidebar:hover {
+  width: 200px;
+  overflow-y: auto;
+}
+
+/* Chrome scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 0;
+}
+
+.sidebar:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+}
+
 .sidebar:hover{width:200px;transition-delay:0s}.sidebar:hover>.credit{height:25px;transition:.4s 0.2s}.guiContent{inset:20px;left:70px;top:40px;z-index:1;padding-top:32px}.guiTopBar{z-index:1;top:0;left:50px;right:0;height:25px}.version{top:0;left:0;margin-inline:10px;color:#888;font-size:.9em;letter-spacing:.5px;height:100%;display:flex}.controls{top:0;right:0;display:grid;grid-template-columns:1fr 1fr 1fr;height:25px;width:122px;gap:1px;border:1px solid var(--background);z-index:2}.controls>div{display:grid;place-items:center;font-weight:100}.closeControl{transition:.1s}.closeControl:hover{background:red}.creditsPage,.gamemodesPage,.searchPage{position:absolute;inset:0;top:32px}.gamemodesList{display:grid;gap:0 30px;padding-inline:30px;margin-top:0;padding-top:15px;margin-bottom:0;grid-template-columns:1fr 1fr;overflow-y:scroll;inset:0}.leaderboardPage,.logsPage{inset:10px;position:absolute}.pathText{position:absolute;top:40px;left:70px;right:20px;z-index:3;padding:7px 10px;height:22px}.clearLogsButton,.refreshControl{z-index:5;place-items:center;cursor:pointer}.leaderboardPage{top:42px}.leaderboardList{list-style:none;margin:0;padding:20px 40px 10px;height:100%;overflow:scroll;font-size:1.5em}.logsPage{top:37px;background:#000d;border-radius:2.5px}.logMessages{list-style:none;margin:10px;padding:0;display:flex;flex-direction:column-reverse;overflow-y:scroll;word-wrap:break-word;position:absolute;inset:0}.clearLogsButton{position:absolute;top:5px;right:5px;width:25px;height:25px;display:grid;scale:-1 1 1;transition:.2s}.searchbarHolder{display:flex;outline:2px solid var(--highlight);margin:10px 20px;height:30px;font-size:2em}.searchbarInput{outline:0;border:none;background:0 0;color:#fff;flex:1;font-size:.5em;font-family:Nunito;padding-inline:5px}.gamemode,.settingsPage>div{border-radius:2.5px;background:var(--background)}.searchbarButton{color:#fff;font-size:.6em;aspect-ratio:1/1;height:30px;display:grid;place-items:center;cursor:pointer}.bigText,.bigTextContainer{height:50px;width:200px;font-family:Titan One}.searchResults{position:absolute;inset:0;top:45px;padding-inline:20px;overflow-y:scroll}.favoritesPage,.settingsPage{inset:0;top:32px;overflow-y:scroll;position:absolute}.noResult{margin:20px 10px;font-size:.85em}.clearLogsButton:hover,.licenseMessage{font-size:1.25em}.favoritesPage{padding-block:10px;padding-inline:20px}.licenseMessage{font-weight:900;padding-inline:20px;margin-top:10px}.copyrightTag{font-size:.7em;font-weight:200;position:absolute;bottom:0;left:0;padding:5px 8px}.codingCredits,.creditLinks,.uploadDates{list-style:none;padding-inline:20px;margin-block:16px}.settingsPage{padding:10px;display:flex;flex-direction:column;gap:10px}.sidebarPaths{display:flex;flex-direction:column;width:200px}.bigTextContainer{display:flex;font-size:2em;margin-block:10px;transition:font-size .2s .1s,margin-block .2s .1s}.bigText{display:flex;align-items:center;justify-content:center}.refreshControl{position:absolute;top:45px;right:25px;width:25px;height:25px;display:grid}.gamemode{width:100%;height:200px;margin-bottom:30px;cursor:pointer;display:flex;justify-content:center;align-items:center;padding-top:10px;position:relative;overflow:hidden;padding-bottom:35px;transition:.4s}.contentPage,.gamemode>div{position:absolute;bottom:0}.gamemode:hover{box-shadow:0 0 10px var(--highlight);transition:.2s}.gamemode>img{width:85%;max-width:100%;max-height:100%}.gamemode>div{left:0;right:0;height:25px;background:var(--highlight);display:flex;justify-content:center;align-items:center;box-shadow:0 -5px 5px #0004;font-weight:800;font-size:1.1em;transition:.25s}.contentPage{inset-inline:0;top:35px}.cheatsList{display:flex;flex-direction:column;height:100%;overflow-y:scroll;padding-inline:10px}.cheatToggle,.cheatToggle>.toggleTrigger,.runCheat{height:35px;border-radius:2.5px}.cheatsList>div{display:grid;margin-bottom:10px;position:relative;background:var(--background);border-radius:2.5px}.cheatInfo,.cheatInputs,.cheatName,.cheatTop,.logMessage>span,.runCheat,.sidebarPath,.sidebarPath>i{display:flex}.cheatInfo{flex-direction:column;flex:1}.cheatName{font-size:1.5em;font-weight:700}.cheatDescription{font-size:.8em;margin-right:25px}.runCheat{--buttonColor:var(--highlight);width:20%;background:var(--buttonColor);margin-block:auto;cursor:pointer;align-items:center;justify-content:center;font-weight:800;transition:.5s;color:#fff!important}.runCheat:hover{box-shadow:0 0 10px 0 var(--buttonColor);transition:.3s}.runCheat:active{box-shadow:0 0 0 0 var(--buttonColor);transition:50ms}.cheatInputs{margin:5px 0 5px 5px;flex-direction:column;gap:5px}.searchResult,.standing{margin-bottom:10px;transition:.2s}.creditsPage>ul>li>strong,.logMessage img,.standingBlook{margin-right:5px}.cheatInputs>div{display:flex;flex-direction:row;font-size:.8rem;color:var(--highlight);font-weight:700;align-items:center}.cheatInputs>div>span{flex:1}.cheatToggle{width:20%;background:var(--highlight2);margin-block:auto;cursor:pointer;position:relative}.cheatToggle>.toggleTrigger{width:45px;position:absolute;top:0;left:0;background:var(--highlight);pointer-events:none;transition:left .2s,box-shadow .5s;z-index:1}.cheatToggle:hover>.toggleTrigger{box-shadow:0 0 10px 0 var(--highlight);transition:left .2s,box-shadow .2s}.toggleTrigger.active{left:calc(100% - 45px)}.toggleColor{position:absolute;inset:10px 20px;background:rgb(from var(--toggleOff) r g b / 25%);border-radius:2.5px;transition:.2s}.toggleTrigger.active+.toggleColor{background:rgb(from var(--toggleOn) r g b / 25%)}input[data-type],select[data-type]{width:20%;height:25px;outline:0;border:2px solid var(--highlight);box-sizing:border-box;background:0 0;color:#fff;font-size:.9em;padding-left:5px;font-family:Nunito;border-radius:2px;font-weight:800}.logo,.sidebarPath>i{width:50px;height:50px}select[data-type]{-webkit-appearance:none;-moz-appearance:none;text-indent:1px;text-overflow:''}input::placeholder{color:rgb(from var(--textColor) r g b / 50%)}input[data-type]::-webkit-inner-spin-button,input[data-type]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[data-type][type=number]{-moz-appearance:textfield}select[data-type] option{border-radius:0}select[data-type]::-ms-expand{display:none}.sidebarPath{align-items:center;cursor:pointer;transition:.2s 0.1s}.searchResult:hover,.sidebarPath:hover{color:var(--highlight);text-shadow:0 0 5px var(--highlight)}.sidebarPath>i{justify-content:center;align-items:center;font-size:1.5em}.sidebarPath>span{padding-left:5px}.sidebar:hover .sidebarPath{padding-left:20px;transition-delay:0s}.logo{left:0;transition:left .2s .1s;display:grid;place-items:center;min-width:50px;position:absolute}.sidebar:hover .logo{left:28px;transition:left .2s}.bigText{margin-top:-150px;transition:margin-top .1s}.sidebar:hover .bigText{margin-top:0;transition:margin-top .4s 0.1s}.sidebar:hover .bigTextContainer{font-size:2.5em;margin-block:20px;transition:font-size .2s,margin-block .2s}/* === Glowing title effect === */
 .bigText {
   text-shadow: 0 0 10px var(--highlight), 0 0 20px var(--highlight2);
@@ -1620,6 +1663,23 @@ run: function() {
                 window.open(url, "_blank", "width=500,height=500,resizable=yes,scrollbars=yes,status=yes");
             }
         }, {
+            name: "Blooket Stream Finder",
+            description: "Opens Stream Finder",
+            run: function() {
+                function getGameCode() {
+                    const appDiv = document.querySelector('#app>div>div');
+                    if (appDiv) {
+                        const reactComponent = Object.values(appDiv)[1]?.children[0]?._owner;
+                        return reactComponent?.stateNode?.props?.client?.hostId || null;
+                    }
+                    return null;
+                }
+
+                const gameCode = getGameCode();
+                const url = gameCode ? "https://0alter0.github.io/blooketstreamfinderV2/" + gameCode : "https://0alter0.github.io/blooketstreamfinderV2/";
+                window.open(url, "_blank", "width=500,height=500,resizable=yes,scrollbars=yes,status=yes");
+            }
+        }, {
                name: "Crash Game",
             description: "Crashes the host's game",
             run: function() {
@@ -1802,6 +1862,7 @@ run: function() {
                 })();
             }
         }, {
+
                         name: "Subtle Highlight Answers",
                         description: "Removes the shadow from correct answers",
                         run: function () {
@@ -6414,6 +6475,237 @@ versions.forEach(([ver, desc, link]) => {
 // Append to GUI content
 guiContent.appendChild(changelogPage);
 
+        // ================= ALT MANAGER PAGE =================
+const altPage = document.createElement("div");
+altPage.className = classes.favoritesPage || "favoritesPage";
+
+Object.assign(altPage.style, {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    padding: "25px 20px 50px 20px",
+    overflowY: "auto"
+});
+
+// ===== Styles =====
+const altStyle = document.createElement("style");
+altStyle.textContent = `
+.${classes.favoritesPage || "favoritesPage"}::-webkit-scrollbar {
+  width: 8px;
+}
+.${classes.favoritesPage || "favoritesPage"}::-webkit-scrollbar-thumb {
+  background: var(--highlight2);
+  border-radius: 4px;
+}
+.${classes.favoritesPage || "favoritesPage"}::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.altInput {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--textColor);
+  font-size: .95em;
+  outline: none;
+  transition: border .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.altInput::placeholder {
+  color: rgba(255,255,255,.45);
+}
+.altInput:focus {
+  border-color: var(--highlight);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 2px rgb(from var(--highlight) r g b / 35%);
+}
+
+.altBtn {
+  padding: 10px;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  color: #000;
+  background: linear-gradient(135deg, var(--highlight), var(--highlight2));
+  box-shadow: 0 6px 20px rgb(from var(--highlight) r g b / 45%);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.altBtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 10px 30px rgb(from var(--highlight) r g b / 55%);
+}
+.altBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgb(from var(--highlight) r g b / 35%);
+}
+
+.altSmallBtn {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: .8em;
+}
+`;
+document.head.appendChild(altStyle);
+
+// ===== Title =====
+const altTitle = document.createElement("div");
+altTitle.className = "bigTextContainer";
+altTitle.innerHTML = `<div class="bigText">👥 Alt Manager</div>`;
+Object.assign(altTitle.style, {
+    fontSize: "2.2em",
+    fontWeight: "900",
+    textAlign: "center",
+    marginBottom: "10px",
+    textShadow: `0 0 12px var(--highlight), 0 0 24px var(--highlight2)`
+});
+altPage.appendChild(altTitle);
+
+// ===== Add Alt Card =====
+const addAltCard = document.createElement("div");
+Object.assign(addAltCard.style, {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    padding: "16px 20px",
+    borderRadius: "14px",
+    background: "var(--background2)",
+    boxShadow: "0 5px 20px rgba(0,0,0,0.28)"
+});
+
+addAltCard.innerHTML = `
+  <span style="font-weight:800;color:var(--highlight)">Add Alt</span>
+
+  <input id="altUser" class="altInput" placeholder="Username">
+
+  <div style="display:flex;gap:8px;align-items:center">
+    <input id="altPass" class="altInput" type="password" placeholder="Password" style="flex:1">
+    <button id="toggleAddPass" class="altBtn altSmallBtn">👁</button>
+  </div>
+
+  <button id="saveAltBtn" class="altBtn">➕ Save Alt</button>
+`;
+altPage.appendChild(addAltCard);
+
+// ===== Alt List =====
+const altList = document.createElement("div");
+Object.assign(altList.style, {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px"
+});
+altPage.appendChild(altList);
+
+// ===== Storage =====
+const ALT_KEY = "xgui_alts";
+const getAlts = () => JSON.parse(localStorage.getItem(ALT_KEY) || "[]");
+const setAlts = (alts) => localStorage.setItem(ALT_KEY, JSON.stringify(alts));
+
+// ===== Render =====
+function renderAlts() {
+    altList.innerHTML = "";
+    const alts = getAlts();
+
+    if (!alts.length) {
+        const empty = document.createElement("div");
+        empty.style.opacity = ".6";
+        empty.innerText = "No alts saved";
+        altList.appendChild(empty);
+        return;
+    }
+
+    alts.forEach((alt, index) => {
+        let visible = false;
+
+        const card = document.createElement("div");
+        Object.assign(card.style, {
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            padding: "16px 20px",
+            borderRadius: "14px",
+            background: "var(--background2)",
+            boxShadow: "0 5px 20px rgba(0,0,0,0.28)",
+            transition: "transform .2s ease, box-shadow .2s ease"
+        });
+
+        card.onmouseover = () => {
+            card.style.transform = "translateY(-4px)";
+            card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.35)";
+        };
+        card.onmouseleave = () => {
+            card.style.transform = "translateY(0)";
+            card.style.boxShadow = "0 5px 20px rgba(0,0,0,0.28)";
+        };
+
+        const passSpan = document.createElement("span");
+        passSpan.style.opacity = ".6";
+        passSpan.innerText = "••••••••";
+
+        const viewBtn = document.createElement("button");
+        viewBtn.className = "altBtn altSmallBtn";
+        viewBtn.innerText = "👁 View";
+
+        viewBtn.onclick = () => {
+            visible = !visible;
+            passSpan.innerText = visible ? alt.pass : "••••••••";
+            viewBtn.innerText = visible ? "🙈 Hide" : "👁 View";
+        };
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "altBtn altSmallBtn";
+        removeBtn.innerText = "Remove";
+        removeBtn.onclick = () => {
+            const all = getAlts();
+            all.splice(index, 1);
+            setAlts(all);
+            renderAlts();
+        };
+
+        card.append(
+            Object.assign(document.createElement("span"), {
+                innerText: alt.user,
+                style: "font-weight:800;color:var(--highlight)"
+            }),
+            passSpan,
+            viewBtn,
+            removeBtn
+        );
+
+        altList.appendChild(card);
+    });
+}
+
+// ===== Add Alt Logic =====
+const addPassInput = addAltCard.querySelector("#altPass");
+addAltCard.querySelector("#toggleAddPass").onclick = () => {
+    addPassInput.type = addPassInput.type === "password" ? "text" : "password";
+};
+
+addAltCard.querySelector("#saveAltBtn").onclick = () => {
+    const user = addAltCard.querySelector("#altUser").value.trim();
+    const pass = addPassInput.value.trim();
+    if (!user || !pass) return;
+
+    const alts = getAlts();
+    alts.push({ user, pass });
+    setAlts(alts);
+
+    addAltCard.querySelector("#altUser").value = "";
+    addPassInput.value = "";
+    addPassInput.type = "password";
+
+    renderAlts();
+};
+
+// Refresh on open
+altPage.onPath = renderAlts;
+
+
+
+
 
 
 
@@ -7270,6 +7562,27 @@ function createSidebarPath(name, iconKey, page) {
         <path d="M8 21h8M8 17v4M16 17v4"/>
         <path d="M7 3h10v4a5 5 0 01-10 0V3z"/>
       </svg>`,
+      alt: `
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     width="1em" height="1em"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+  <!-- main user -->
+  <circle cx="9" cy="8" r="3"/>
+  <path d="M3.5 18c0-3 3-5 5.5-5s5.5 2 5.5 5"/>
+
+  <!-- alt user -->
+  <circle cx="17" cy="9" r="2.5"/>
+  <path d="M14.5 18c.2-2.2 2.1-3.8 4.5-3.8"/>
+
+</svg>
+`,
+
 
     terminal: `
       <svg xmlns="http://www.w3.org/2000/svg"
@@ -7394,6 +7707,7 @@ createSidebarPath("Favorites", "star", favoritesPage);
 createSidebarPath("Logs", "terminal", logsPage);
 createSidebarPath("Settings", "cog", settingsPage);
 createSidebarPath("Mobile Mode", "mobile", mobilePage);
+createSidebarPath("Alt Manager", "alt", altPage);
 createSidebarPath("Changelog", "changelog", changelogPage);
 createSidebarPath("Info/Credits", "code", creditsPage);
 
