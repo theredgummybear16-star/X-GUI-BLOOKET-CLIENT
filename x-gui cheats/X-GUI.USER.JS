@@ -1662,7 +1662,7 @@ window.addEventListener("beforeunload", saveGUIState);
             }
         }, {
             name: "Account Generator",
-            description: "Generates An Account, Only works on Blooket SignUp Page",
+            description: "Generates An Account, Only works on Blooket SignUp Page And You Need CORS Disabled",
             run: async function () {
 
 
