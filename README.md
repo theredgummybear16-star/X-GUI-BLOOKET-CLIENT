@@ -65,7 +65,7 @@ I am **not responsible** for any action taken against you or your Blooket accoun
 ---
 
 ## 📄 Feedback
-Please create an issue or email me!
+Please create an issue, email me or DM on discord @xullysfr
 
 ---
 
