@@ -6795,74 +6795,28 @@ altPage.onPath = renderAlts;
 
 
 
-        // ===== BLOOK PAGE (X-GUI THEME) =====
+
 const blookPage = document.createElement("div");
 blookPage.className = "blookPage";
 
 Object.assign(blookPage.style, {
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-    padding: "25px 20px 60px 20px", // increased bottom padding from 50px -> 60px
-    overflowY: "auto",
-    height: "100%",
-    background: "linear-gradient(135deg, #0b1020, #12162e, #1b1240)",
-    boxShadow: "inset 0 0 30px rgba(0,0,0,0.6)",
-    borderRadius: "14px"
+  display: "flex",
+  flexDirection: "column",
+  gap: "18px",
+  padding: "25px 20px 60px",
+  overflowY: "auto",
+  height: "100%",
+  background: "linear-gradient(135deg, #0b1020, #12162e, #1b1240)",
+  borderRadius: "14px"
 });
 
-// ===== Styles =====
-const blookStyle = document.createElement("style");
-blookStyle.textContent = `
-.blookPage::-webkit-scrollbar {
-  width: 6px;
-}
+
+const Blookstyle = document.createElement("style");
+Blookstyle.textContent = `
+.blookPage::-webkit-scrollbar { width: 6px; }
 .blookPage::-webkit-scrollbar-thumb {
   background: #5b4bdb;
   border-radius: 4px;
-}
-.blookPage::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.blookInput {
-  background: rgba(20,25,55,0.65);
-  border: 1px solid rgba(120,100,255,0.25);
-  border-radius: 12px;
-  padding: 8px 10px;
-  color: #fff;
-  font-size: 0.95em;
-  outline: none;
-  width: 70px;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-.blookInput:focus {
-  border-color: #8f6bff;
-  box-shadow: 0 0 10px rgba(120,100,255,0.7);
-  background: rgba(25,30,65,0.8);
-}
-
-.blookBtn {
-  padding: 11px 24px;
-  border-radius: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  border: none;
-  color: #fff;
-  background: linear-gradient(135deg, #8f6bff, #5b4bdb);
-  box-shadow: 0 6px 18px rgba(120,100,255,0.35);
-  transition: all 0.15s ease;
-  margin-bottom: 12px; /* added bottom margin for breathing room */
-}
-.blookBtn:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-  box-shadow: 0 8px 22px rgba(120,100,255,0.45);
-}
-.blookBtn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(120,100,255,0.3);
 }
 
 .editorContainer {
@@ -6870,152 +6824,248 @@ blookStyle.textContent = `
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
-  background: rgba(18,22,46,0.85);
   padding: 18px;
   border-radius: 18px;
-  border: 1px solid rgba(120,100,255,0.15);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  background: rgba(18,22,46,0.85);
 }
 
-.finalConfigContainer {
-  margin-top: 18px;
-  width: 100%;
+.blookInput {
+  width: 70px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(120,100,255,0.25);
+  background: rgba(20,25,55,0.65);
+  color: #fff;
+  text-align: center;
+}
+.blookInput:focus {
+  border-color: #8f6bff;
+  box-shadow: 0 0 10px rgba(120,100,255,0.7);
+  outline: none;
+}
+
+.previewBox {
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+  background: rgba(10,12,30,0.7);
+  border-radius: 20px;
+  border: 1px solid rgba(120,100,255,0.35);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.55);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 12px; /* added padding to prevent button from being cramped */
+  justify-content: center;
+  gap: 8px;
+}
+
+.previewLabel {
+  font-weight: 800;
+  color: #cfcfff;
+  font-size: 0.9em;
 }
 
 .finalConfigInput {
+  width: 92%;
+  margin: 0 auto;
+  padding: 12px;
+  border-radius: 14px;
   background: rgba(20,25,55,0.75);
   border: 1px solid rgba(120,100,255,0.25);
-  border-radius: 14px;
-  padding: 12px;
   color: #fff;
   font-weight: 700;
-  font-size: 1.05em;
   text-align: center;
-  width: 92%;
-  box-shadow: 0 0 12px rgba(120,100,255,0.25);
+}
+
+.blookBtn {
+  margin: 14px auto 0;
+  padding: 12px 26px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(135deg, #8f6bff, #5b4bdb);
+  box-shadow: 0 8px 22px rgba(120,100,255,0.45);
 }
 `;
-document.head.appendChild(blookStyle);
+document.head.appendChild(Blookstyle);
 
 
-// ===== Title =====
-const blookTitle = document.createElement("div");
-blookTitle.innerHTML = `
-<div style="
-  font-size:2em;
-  font-weight:900;
-  text-align:center;
-  color:#fff;
-  text-shadow:0 0 6px rgba(120,100,255,0.7);
-">
-🖌️ Blook Editor
-</div>
-<div style="
-  font-size:1em;
-  font-weight:500;
-  color:#cfcfff;
-  text-align:center;
-  margin-top:6px;
-">
-Sets Your Blook To Custom • In-Game Only
+blookPage.innerHTML += `
+<div style="text-align:center">
+  <div style="font-size:2em;font-weight:900;color:#fff">🖌️ Blook Editor</div>
+  <div style="color:#cfcfff;margin-top:6px">Sets Your Blook To Custom • In-Game Only</div>
 </div>
 `;
-blookPage.appendChild(blookTitle);
 
-// ===== Editor Container =====
+
 const editorContainer = document.createElement("div");
 editorContainer.className = "editorContainer";
 blookPage.appendChild(editorContainer);
 
-// ===== Inputs =====
-function createBlookInput(label, id) {
-    const div = document.createElement("div");
-    div.style.display = "flex";
-    div.style.flexDirection = "column";
-    div.style.alignItems = "center";
-    div.style.gap = "6px";
 
-    const l = document.createElement("label");
-    l.htmlFor = id;
-    l.textContent = label;
-    l.style.color = "#fff";
-    l.style.fontWeight = "600";
-    l.style.fontSize = "0.9em";
+function createInput(label) {
+  const wrap = document.createElement("div");
+  wrap.style.display = "flex";
+  wrap.style.flexDirection = "column";
+  wrap.style.alignItems = "center";
+  wrap.style.gap = "6px";
 
-    const input = document.createElement("input");
-    input.type = "number";
-    input.id = id;
-    input.value = 0;
-    input.className = "blookInput";
+  const l = document.createElement("label");
+  l.textContent = label;
+  l.style.color = "#fff";
+  l.style.fontSize = "0.9em";
+  l.style.fontWeight = "600";
 
-    div.append(l, input);
-    editorContainer.appendChild(div);
-    return input;
+  const i = document.createElement("input");
+  i.type = "number";
+  i.value = 0;
+  i.min = 0;        // 🚫 no negatives
+  i.step = 1;
+  i.className = "blookInput";
+
+  wrap.append(l, i);
+  editorContainer.appendChild(wrap);
+  return i;
 }
 
 const parts = {
-    base: createBlookInput("Base", "base"),
-    clothing: createBlookInput("Clothing", "clothing"),
-    eyes: createBlookInput("Eyes", "eyes"),
-    glasses: createBlookInput("Glasses", "glasses"),
-    hair: createBlookInput("Hair", "hair"),
-    hairColor: createBlookInput("Hair Color", "hairColor"),
-    hat: createBlookInput("Hat", "hat"),
-    item: createBlookInput("Item", "item"),
-    mouth: createBlookInput("Mouth", "mouth"),
-    nose: createBlookInput("Nose", "nose"),
-    cheeks: createBlookInput("Cheeks", "cheeks"),
-    eyebrows: createBlookInput("Eyebrows", "eyebrows"),
-    eyebrowsColor: createBlookInput("Eyebrows Color", "eyebrowsColor")
+  base: createInput("Base"),
+  clothing: createInput("Clothing"),
+  eyes: createInput("Eyes"),
+  glasses: createInput("Glasses"),
+  hair: createInput("Hair"),
+  hairColor: createInput("Hair Color"),
+  hat: createInput("Hat"),
+  item: createInput("Item"),
+  mouth: createInput("Mouth"),
+  nose: createInput("Nose"),
+  cheeks: createInput("Cheeks"),
+  eyebrows: createInput("Eyebrows"),
+  eyebrowsColor: createInput("Eyebrows Color")
 };
 
-// ===== Final Config =====
-const finalConfigContainer = document.createElement("div");
-finalConfigContainer.className = "finalConfigContainer";
+
+const previewBox = document.createElement("div");
+previewBox.className = "previewBox";
+
+const previewLabel = document.createElement("div");
+previewLabel.className = "previewLabel";
+previewLabel.textContent = "Select a part";
+
+const previewImg = document.createElement("img");
+previewImg.style.maxWidth = "85%";
+previewImg.style.maxHeight = "85%";
+
+previewBox.append(previewLabel, previewImg);
+blookPage.appendChild(previewBox);
+
+
+const GITHUB_BASE =
+  "https://raw.githubusercontent.com/0alter0/blook-parts/241bda5908c9355caef55ac994b1c2ec21124eb7";
+
+const PART_FOLDER_MAP = {
+  base: "base",
+  clothing: "clothing",
+  eyes: "eyes",
+  glasses: "glasses",
+  hair: "hair",
+  hat: "hats",
+  item: "object",
+  mouth: "mouth",
+  nose: "nose",
+  cheeks: "cheeks",
+  eyebrows: "eyebrows"
+};
+
+function getPreviewURL(part, id) {
+  if (!id || id <= 0) return "";
+  const folder = PART_FOLDER_MAP[part];
+  return folder ? `${GITHUB_BASE}/${folder}/item${id}.svg` : "";
+}
+
+
+let previewTimeout = null;
+let lastPreviewKey = "";
+
+function queuePreviewUpdate(part, id) {
+  clearTimeout(previewTimeout);
+
+  previewTimeout = setTimeout(() => {
+    const key = `${part}:${id}`;
+    lastPreviewKey = key;
+
+    previewImg.dataset.key = key;
+    previewImg.src = getPreviewURL(part, id);
+  }, 120);
+}
+
+Object.entries(parts).forEach(([part, input]) => {
+  input.addEventListener("focus", () => {
+    previewLabel.textContent = part.toUpperCase();
+    queuePreviewUpdate(part, input.value);
+  });
+
+  input.addEventListener("input", () => {
+    if (document.activeElement === input) {
+      queuePreviewUpdate(part, input.value);
+    }
+  });
+});
+
+previewImg.onerror = () => {
+  if (previewImg.dataset.key !== lastPreviewKey) return;
+  previewImg.src = "";
+  if (!previewLabel.textContent.includes("INVALID")) {
+    previewLabel.textContent += " (INVALID)";
+  }
+};
+
+previewImg.onload = () => {
+  previewLabel.textContent =
+    previewLabel.textContent.replace(" (INVALID)", "");
+};
+
 
 const finalConfig = document.createElement("input");
 finalConfig.className = "finalConfigInput";
 finalConfig.placeholder = "Final Configuration String";
-finalConfigContainer.appendChild(finalConfig);
+blookPage.appendChild(finalConfig);
 
 const setBtn = document.createElement("button");
 setBtn.className = "blookBtn";
 setBtn.textContent = "Set Blook";
-setBtn.style.marginTop = "16px";
-finalConfigContainer.appendChild(setBtn);
+blookPage.appendChild(setBtn);
 
-blookPage.appendChild(finalConfigContainer);
 
-// ===== Logic =====
 function updateConfig() {
-    const values = Object.values(parts).map(i => i.value || 0);
-    finalConfig.value =
-        `${values[0]}#${values[1]}#${values[2]}#${values[3]}#${values[4]}` +
-        `$${values[5]}#${values[6]}#${values[7]}#${values[8]}#${values[9]}` +
-        `#${values[10]}#${values[11]}$${values[12]}`;
+  const v = Object.values(parts).map(i => i.value || 0);
+  finalConfig.value =
+    `${v[0]}#${v[1]}#${v[2]}#${v[3]}#${v[4]}` +
+    `$${v[5]}#${v[6]}#${v[7]}#${v[8]}#${v[9]}` +
+    `#${v[10]}#${v[11]}$${v[12]}`;
 }
 Object.values(parts).forEach(i => i.addEventListener("input", updateConfig));
 updateConfig();
 
+
 setBtn.onclick = () => {
-    const blook = finalConfig.value;
-    let t = Object.values(function e(t = document.querySelector("body>div")) {
-        return Object.values(t)[1]?.children?.[0]?._owner?.stateNode
-            ? t
-            : e(t.querySelector(":scope>div"));
-    }())[1].children[0]._owner.stateNode;
+  const blook = finalConfig.value;
+  let t = Object.values(function e(t = document.querySelector("body>div")) {
+    return Object.values(t)[1]?.children?.[0]?._owner?.stateNode
+      ? t
+      : e(t.querySelector(":scope>div"));
+  }())[1].children[0]._owner.stateNode;
 
-    if (!t.state.unlocks) t.props.client.blook = blook;
-
-    t.props.liveGameController.setVal({
-        path: `c/${t.props.client.name}/b`,
-        val: blook
-    });
+  if (!t.state.unlocks) t.props.client.blook = blook;
+  t.props.liveGameController.setVal({
+    path: `c/${t.props.client.name}/b`,
+    val: blook
+  });
 };
+
+
 
 
 
