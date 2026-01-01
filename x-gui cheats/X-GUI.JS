@@ -1,6 +1,5 @@
 
 
-
  /**
  * @license AGPL-3.0
  * Blooket Cheats
@@ -9774,6 +9773,57 @@ function updatePing() {
 
 updatePing();
 setInterval(updatePing, 5000);
+
+        // ===== RESET GUI POSITION BUTTON =====
+if (!document.querySelector("#resetGuiBtn")) {
+  const resetGuiBtn = document.createElement("button");
+  resetGuiBtn.id = "resetGuiBtn";
+  resetGuiBtn.textContent = "Reset GUI Position";
+
+  Object.assign(resetGuiBtn.style, {
+    display: "block",            // makes centering easier
+    margin: "10px auto 0 auto",  // centers the button horizontally
+    padding: "10px 20px",
+    borderRadius: "12px",
+    border: "none",
+    cursor: "pointer",
+    background: "linear-gradient(135deg, #8A2BE2, #4B0082)", // gradient for modern look
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: "14px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.25)", // subtle shadow
+    transition: "all 0.3s ease",  // smooth hover effect
+  });
+
+  // Hover effect
+  resetGuiBtn.onmouseenter = () => {
+    resetGuiBtn.style.transform = "scale(1.05)";
+    resetGuiBtn.style.boxShadow = "0 6px 14px rgba(0,0,0,0.3)";
+  };
+  resetGuiBtn.onmouseleave = () => {
+    resetGuiBtn.style.transform = "scale(1)";
+    resetGuiBtn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.25)";
+  };
+
+  resetGuiBtn.onclick = () => {
+    // center GUI
+    gui.style.left = (window.innerWidth / 2 - 400) + "px";
+    gui.style.top  = (window.innerHeight / 2 - 250) + "px";
+
+    // un-minimize if needed
+    if (minimizeControl?.minimized) {
+      minimizeControl.onclick();
+    }
+
+    // clear saved position
+    document.cookie =
+      "xgui_state_v4=; path=/; domain=.blooket.com; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  };
+
+  // place directly under ping display
+  pingDisplay.parentElement.appendChild(resetGuiBtn);
+}
+
 
 
 
