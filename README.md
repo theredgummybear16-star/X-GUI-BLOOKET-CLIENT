@@ -1,7 +1,6 @@
 # 🚀 X-GUI Blooket Client
-# EXTENSION MADE BY @LANDSEDGE ON DISCORD HAS BEEN ADDED!
-# BYPASSES CSP AND CORS
-# YOU CAN FIND INSTALL INSTRUCTIONS IN THE HELP SECTION
+# EXTENSION MADE BY LANDSEDGE!
+# CLIENT SIDED BLOOK CHANGER
 # FIXED MOST CHEATS!
 
 [![Website](https://img.shields.io/badge/Website-X--GUI-1f6feb?style=for-the-badge&logo=google-chrome&logoColor=white)](https://xgui-client.github.io)
