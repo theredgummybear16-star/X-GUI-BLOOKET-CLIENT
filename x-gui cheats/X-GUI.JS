@@ -236,7 +236,6 @@ button,
                 tile.style.overflow = "hidden"; // keeps images clipped cleanly
             });
         }
-        const answerDatabase = {};
         // delay ensures elements exist
         setTimeout(roundGamemodeBoxes, 50);
 
@@ -1076,38 +1075,28 @@ button,
                             if (!this.enabled) {
                                 this.enabled = true;
                                 (() => {
-                                    console.log("🧠 Learn Auto Answer v23 (UNBLOCKED)\n");
+                                    console.log("🧠 Learn Auto Answer v3.3\n");
 
+                                    if (!window.answerDatabase) {
+                                        window.answerDatabase = {};
+                                    }
 
-                                    // 1. AUTOMATICALLY SKIP FEEDBACK
                                     function autoContinue() {
                                         const feedbackContainer = document.querySelector('[class*="feedbackContainer"]');
                                         const feedbackText = document.querySelector('[class*="feedbackText"]');
-
-                                        // Check if feedback is actually visible/present
-                                        // We don't check body.textContent anymore because it lingers
-                                        const isFeedback = feedbackContainer ||
-                                            (feedbackText && feedbackText.offsetParent !== null); // visible check
+                                        const isFeedback = feedbackContainer || (feedbackText && feedbackText.offsetParent !== null); 
 
                                         if (isFeedback) {
-                                            if (feedbackContainer) {
-                                                feedbackContainer.click();
-                                            } else {
-                                                document.body.click();
-                                            }
+                                            if (feedbackContainer) feedbackContainer.click();
+                                            else document.body.click();
 
                                             const event = new KeyboardEvent('keydown', {
-                                                key: 'Enter',
-                                                code: 'Enter',
-                                                keyCode: 13,
-                                                which: 13,
-                                                bubbles: true
+                                                key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true
                                             });
                                             document.dispatchEvent(event);
                                         }
                                     }
 
-                                    // 2. LEARN FROM VISIBLE ANSWERS
                                     function learn() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
 
@@ -1115,30 +1104,33 @@ button,
                                             const questionTextEl = wrapper.querySelector('[class*="questionText"]');
                                             if (!questionTextEl) return;
 
-                                            const question = questionTextEl.textContent.trim();
+                                            let questionMedia = wrapper.querySelector('[class*="questionImage"]');
+                                            let qMediaSrc = questionMedia ? questionMedia.src : "none";
 
-                                            // --- CHECK 1: Multiple Choice ---
-                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn =>
-                                                btn.innerHTML.includes('fa-check') ||
+                                            let questionMath = wrapper.querySelector('[class*="mq-selectable"]');
+                                            let qMathText = questionMath ? questionMath.innerText.trim() : "none";
+
+                                            const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
+
+                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn => 
+                                                btn.innerHTML.includes('fa-check') || 
                                                 (btn.style.backgroundColor && btn.style.backgroundColor.includes('rgb(139, 220, 111)')) ||
                                                 (btn.querySelector('[class*="answerFront"]') && btn.querySelector('[class*="answerFront"]').style.backgroundColor.includes('rgb(139, 220, 111)'))
                                             );
 
                                             if (correctBtn) {
-                                                const answerTextEl = correctBtn.querySelector('[class*="answerText"]');
-                                                if (answerTextEl) {
-                                                    const answer = answerTextEl.textContent.trim();
-                                                    if (!answerDatabase[question]) {
-                                                        answerDatabase[question] = [answer];
-                                                        console.log(`✓ Learned (MC): "${question}" → "${answer}"`);
-                                                    }
+                                                const textEl = correctBtn.querySelector('[class*="answerText"]');
+                                                const mathEl = correctBtn.querySelector('[class*="mq-selectable"]');
+
+                                                const answer = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : null);
+
+                                                if (answer && !window.answerDatabase[question]) {
+                                                    window.answerDatabase[question] = [answer];
+                                                    console.log(`✓ Learned (MC): "${question}" → "${answer}"`);
                                                 }
                                             }
 
-                                            // --- CHECK 2: Typing Questions ---
                                             const rawTypingEls = Array.from(wrapper.querySelectorAll('[class*="typingFeedbackAnswer"]'));
-
-                                            // Filter carefully using getAttribute to avoid SVG crash
                                             const realTypingAnswers = rawTypingEls.filter(el => {
                                                 const cls = el.getAttribute('class') || "";
                                                 return !cls.includes('Answers') && !cls.includes('Icon');
@@ -1146,90 +1138,71 @@ button,
 
                                             if (realTypingAnswers.length > 0) {
                                                 const answer = realTypingAnswers[0].textContent.trim();
-
-                                                if (!answerDatabase[question]) {
-                                                    answerDatabase[question] = [answer];
+                                                if (!window.answerDatabase[question]) {
+                                                    window.answerDatabase[question] = [answer];
                                                     console.log(`✓ Learned (Typing): "${question}" → "${answer}"`);
                                                 }
                                             }
                                         });
                                     }
 
-                                    // 3. ANSWER ACTIVE QUESTION
                                     function answer() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
                                         if (wrappers.length === 0) return;
 
-                                        // The active question is usually the last one, but verify it's not sliding out
                                         let activeWrapper = wrappers[wrappers.length - 1];
-                                        if (activeWrapper.className.includes('slideOut') && wrappers.length > 1) {
-                                            // If the last one is sliding out, maybe we shouldn't act yet,
-                                            // OR if there's another one, that's the slideIn?
-                                            // Usually Blooket appends the NEW wrapper last.
-                                            // We'll stick to last for now, but remove the blocker.
-                                        }
-
                                         const questionTextEl = activeWrapper.querySelector('[class*="questionText"]');
                                         if (!questionTextEl) return;
 
-                                        const question = questionTextEl.textContent.trim();
+                                        let questionMedia = activeWrapper.querySelector('[class*="questionImage"]');
+                                        let qMediaSrc = questionMedia ? questionMedia.src : "none";
+                                        let questionMath = activeWrapper.querySelector('[class*="mq-selectable"]');
+                                        let qMathText = questionMath ? questionMath.innerText.trim() : "none";
 
-                                        if (answerDatabase[question]) {
-                                            const knownAnswer = answerDatabase[question][0];
+                                        const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
 
-                                            // --- MC Handling ---
+                                        if (window.answerDatabase[question]) {
+                                            const knownAnswer = window.answerDatabase[question][0];
+
                                             const buttons = activeWrapper.querySelectorAll('[class*="answerButton"]');
-                                            if (buttons.length > 0) {
-                                                for (const btn of buttons) {
-                                                    const btnTextEl = btn.querySelector('[class*="answerText"]');
-                                                    // Ensure we don't click disabled buttons
-                                                    if (btnTextEl && btnTextEl.textContent.trim() === knownAnswer && !btn.className.includes('Disabled')) {
-                                                        console.log(`🎯 Answering (MC): "${question}"`);
-                                                        btn.click();
-                                                        return;
-                                                    }
+                                            for (const btn of buttons) {
+                                                const textEl = btn.querySelector('[class*="answerText"]');
+                                                const mathEl = btn.querySelector('[class*="mq-selectable"]');
+                                                const btnText = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : "");
+
+                                                if (btnText === knownAnswer && !btn.className.includes('Disabled')) {
+                                                    console.log(`🎯 Answering (MC): "${question}"`);
+                                                    btn.click();
+                                                    return;
                                                 }
                                             }
 
-                                            // --- Typing Handling ---
                                             const input = activeWrapper.querySelector('input[class*="typingAnswerInput"]');
                                             if (input && !input.disabled) {
-
-                                                // 1. Fill the box if it's wrong/empty
                                                 if (input.value !== knownAnswer) {
                                                     console.log(`🎯 Typing: "${knownAnswer}"`);
-
-                                                    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                                                    nativeInputValueSetter.call(input, knownAnswer);
-
-                                                    input.dispatchEvent(new Event('input', {
-                                                        bubbles: true
-                                                    }));
-                                                    input.dispatchEvent(new Event('change', {
-                                                        bubbles: true
-                                                    }));
+                                                    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                                                    setter.call(input, knownAnswer);
+                                                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                                                    input.dispatchEvent(new Event('change', { bubbles: true }));
                                                 }
 
-                                                // 2. Click submit (Always try to click if input is visible/enabled)
-                                                // We used to only click if we changed value, but if the first click failed, we got stuck.
-                                                // Now we try clicking submit every cycle until the input disappears/disables.
                                                 const submitBtn = activeWrapper.querySelector('button[class*="typingAnswerButton"]');
-                                                if (submitBtn) {
-                                                    // Small throttle to avoid 1000 clicks/sec
-                                                    if (!submitBtn._lastClick || Date.now() - submitBtn._lastClick > 200) {
-                                                        console.log(`🎯 Submitting Typing...`);
-                                                        submitBtn.click();
-                                                        submitBtn._lastClick = Date.now();
-                                                    }
+                                                if (submitBtn && (!submitBtn._lastClick || Date.now() - submitBtn._lastClick > 200)) {
+                                                    submitBtn.click();
+                                                    submitBtn._lastClick = Date.now();
                                                 }
                                             }
                                         }
                                     }
+
                                     this.data = setInterval(() => {
                                         autoContinue();
                                         learn();
                                         answer();
                                     }, 50);
+
+                                    console.log("✅ Script Active.");
                                 })();
                             } else {
                                 this.enabled = false;
@@ -1248,14 +1221,17 @@ button,
                                 this.enabled = true;
                                 (() => {
                                     console.log("🎨 Highlight Answers Active (Green = Correct, Red = Wrong)\n");
+                                    
+                                    if (!window.answerDatabase) {
+                                        window.answerDatabase = {};
+                                    }
 
-                                    // 1. AUTOMATICALLY SKIP FEEDBACK
                                     function autoContinue() {
                                         const feedbackContainer = document.querySelector('[class*="feedbackContainer"]');
                                         const feedbackText = document.querySelector('[class*="feedbackText"]');
-
-                                        const isFeedback = feedbackContainer ||
-                                            (feedbackText && feedbackText.offsetParent !== null);
+                                        
+                                        const isFeedback = feedbackContainer || 
+                                                        (feedbackText && feedbackText.offsetParent !== null);
 
                                         if (isFeedback) {
                                             if (feedbackContainer) {
@@ -1263,7 +1239,7 @@ button,
                                             } else {
                                                 document.body.click();
                                             }
-
+                                            
                                             const event = new KeyboardEvent('keydown', {
                                                 key: 'Enter',
                                                 code: 'Enter',
@@ -1275,35 +1251,39 @@ button,
                                         }
                                     }
 
-                                    // 2. LEARN ANSWERS (Same robust logic as before)
                                     function learn() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
-
+                                        
                                         wrappers.forEach(wrapper => {
                                             const questionTextEl = wrapper.querySelector('[class*="questionText"]');
                                             if (!questionTextEl) return;
 
-                                            const question = questionTextEl.textContent.trim();
+                                            let questionMedia = wrapper.querySelector('[class*="questionImage"]');
+                                            let qMediaSrc = questionMedia ? questionMedia.src : "none";
 
-                                            // MC Check
-                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn =>
-                                                btn.innerHTML.includes('fa-check') ||
+                                            let questionMath = wrapper.querySelector('[class*="mq-selectable"]');
+                                            let qMathText = questionMath ? questionMath.innerText.trim() : "none";
+
+                                            const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
+
+                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn => 
+                                                btn.innerHTML.includes('fa-check') || 
                                                 (btn.style.backgroundColor && btn.style.backgroundColor.includes('rgb(139, 220, 111)')) ||
                                                 (btn.querySelector('[class*="answerFront"]') && btn.querySelector('[class*="answerFront"]').style.backgroundColor.includes('rgb(139, 220, 111)'))
                                             );
 
                                             if (correctBtn) {
-                                                const answerTextEl = correctBtn.querySelector('[class*="answerText"]');
-                                                if (answerTextEl) {
-                                                    const answer = answerTextEl.textContent.trim();
-                                                    if (!answerDatabase[question]) {
-                                                        answerDatabase[question] = [answer];
-                                                        console.log(`✓ Learned: "${question}" → "${answer}"`);
-                                                    }
+                                                const textEl = correctBtn.querySelector('[class*="answerText"]');
+                                                const mathEl = correctBtn.querySelector('[class*="mq-selectable"]');
+
+                                                const answer = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : null);
+
+                                                if (answer && !window.answerDatabase[question]) {
+                                                    window.answerDatabase[question] = [answer];
+                                                    console.log(`✓ Learned (MC): "${question}" → "${answer}"`);
                                                 }
                                             }
 
-                                            // Typing Check
                                             const rawTypingEls = Array.from(wrapper.querySelectorAll('[class*="typingFeedbackAnswer"]'));
                                             const realTypingAnswers = rawTypingEls.filter(el => {
                                                 const cls = el.getAttribute('class') || "";
@@ -1312,73 +1292,68 @@ button,
 
                                             if (realTypingAnswers.length > 0) {
                                                 const answer = realTypingAnswers[0].textContent.trim();
-                                                if (!answerDatabase[question]) {
-                                                    answerDatabase[question] = [answer];
-                                                    console.log(`✓ Learned: "${question}" → "${answer}"`);
+                                                if (!window.answerDatabase[question]) {
+                                                    window.answerDatabase[question] = [answer];
+                                                    console.log(`✓ Learned (Typing): "${question}" → "${answer}"`);
                                                 }
                                             }
                                         });
                                     }
 
-                                    // 3. HIGHLIGHT CORRECT ANSWER
                                     function highlight() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
                                         if (wrappers.length === 0) return;
 
-                                        // Active question is last wrapper
                                         const activeWrapper = wrappers[wrappers.length - 1];
-
-                                        // Don't highlight during feedback/slideOut
+                                        
                                         if (activeWrapper.className.includes('slideOut')) return;
 
                                         const questionTextEl = activeWrapper.querySelector('[class*="questionText"]');
                                         if (!questionTextEl) return;
 
-                                        const question = questionTextEl.textContent.trim();
+                                        let questionMedia = activeWrapper.querySelector('[class*="questionImage"]');
+                                        let qMediaSrc = questionMedia ? questionMedia.src : "none";
+                                        let questionMath = activeWrapper.querySelector('[class*="mq-selectable"]');
+                                        let qMathText = questionMath ? questionMath.innerText.trim() : "none";
 
-                                        if (answerDatabase[question]) {
-                                            const knownAnswer = answerDatabase[question][0];
+                                        const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
 
-                                            // --- MC HIGHLIGHTING ---
+                                        if (window.answerDatabase[question]) {
+                                            const knownAnswer = window.answerDatabase[question][0];
+
                                             const buttons = activeWrapper.querySelectorAll('[class*="answerButton"]');
                                             if (buttons.length > 0) {
                                                 buttons.forEach(btn => {
                                                     const textEl = btn.querySelector('[class*="answerText"]');
-                                                    if (!textEl) return;
-
-                                                    const text = textEl.textContent.trim();
+                                                    const mathEl = btn.querySelector('[class*="mq-selectable"]');
+                                                    const btnText = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : "");
+                                                    
                                                     const front = btn.querySelector('[class*="answerFront"]');
                                                     const back = btn.querySelector('[class*="answerBack"]');
+                                                    
+                                                    const correctColor = '#00ff00';
+                                                    const wrongColor = '#ff0000';
 
-                                                    // Define Colors
-                                                    const correctColor = '#00ff00'; // Lime Green
-                                                    const wrongColor = '#ff0000'; // Red
-
-                                                    if (text === knownAnswer) {
-                                                        // Make Correct GREEN
+                                                    if (btnText === knownAnswer) {
                                                         if (front) {
                                                             front.style.backgroundColor = correctColor;
-                                                            front.style.color = 'black'; // Ensure text is readable
+                                                            front.style.color = 'black';
                                                         }
-                                                        if (back) back.style.backgroundColor = '#00cc00'; // Darker green for 3D effect
-                                                    } else {
-                                                        // Make Wrong RED
+                                                        if (back) back.style.backgroundColor = '#00cc00';
+                                                    } else if (btnText) {
                                                         if (front) {
                                                             front.style.backgroundColor = wrongColor;
-                                                            front.style.opacity = '0.7'; // Dim it slightly
+                                                            front.style.opacity = '0.7';
                                                         }
                                                         if (back) back.style.backgroundColor = '#cc0000';
                                                     }
                                                 });
                                             }
 
-                                            // --- TYPING HIGHLIGHTING ---
                                             const input = activeWrapper.querySelector('input[class*="typingAnswerInput"]');
                                             if (input) {
-                                                // 1. Change Placeholder
                                                 input.setAttribute('placeholder', `ANSWER: ${knownAnswer}`);
-
-                                                // 2. Change Subheader Text (Usually says "not case sensitive")
+                                                
                                                 const subHeader = activeWrapper.querySelector('[class*="typingAnswerSubheader"]');
                                                 if (subHeader) {
                                                     subHeader.textContent = `ANSWER: ${knownAnswer}`;
@@ -1390,12 +1365,11 @@ button,
                                         }
                                     }
 
-                                    // Loop
-                                    this.data = setInterval(() => {
+                                    this.data=setInterval(() => {
                                         autoContinue();
                                         learn();
                                         highlight();
-                                    }, 100); // 100ms is plenty for visual updates
+                                    }, 100);
 
                                     console.log("✅ Highlighting Active. Play manually to populate database.");
                                 })();
@@ -1416,15 +1390,29 @@ button,
                             if (!this.enabled) {
                                 this.enabled = true;
                                 (() => {
-                                    console.log("🕵️ Subtle Highlight Active (Flat Button = Correct)\n");
+                                    console.log("🕵️ Subtle Highlight Active (Lighter Shadow = Correct)\n");
+                                    
+                                    if (!window.answerDatabase) {
+                                        window.answerDatabase = {};
+                                    }
 
+                                    function lightenColor(color) {
+                                        const rgb = color.match(/\d+/g);
+                                        if (!rgb) return color;
+                                        
+                                        const r = Math.round(parseInt(rgb[0]) + (255 - parseInt(rgb[0])) * 0.1);
+                                        const g = Math.round(parseInt(rgb[1]) + (255 - parseInt(rgb[1])) * 0.1);
+                                        const b = Math.round(parseInt(rgb[2]) + (255 - parseInt(rgb[2])) * 0.1);
+                                        
+                                        return `rgb(${r}, ${g}, ${b})`;
+                                    }
 
                                     function autoContinue() {
                                         const feedbackContainer = document.querySelector('[class*="feedbackContainer"]');
                                         const feedbackText = document.querySelector('[class*="feedbackText"]');
-
-                                        const isFeedback = feedbackContainer ||
-                                            (feedbackText && feedbackText.offsetParent !== null);
+                                        
+                                        const isFeedback = feedbackContainer || 
+                                                        (feedbackText && feedbackText.offsetParent !== null);
 
                                         if (isFeedback) {
                                             if (feedbackContainer) {
@@ -1432,7 +1420,7 @@ button,
                                             } else {
                                                 document.body.click();
                                             }
-
+                                            
                                             const event = new KeyboardEvent('keydown', {
                                                 key: 'Enter',
                                                 code: 'Enter',
@@ -1446,27 +1434,34 @@ button,
 
                                     function learn() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
-
+                                        
                                         wrappers.forEach(wrapper => {
                                             const questionTextEl = wrapper.querySelector('[class*="questionText"]');
                                             if (!questionTextEl) return;
 
-                                            const question = questionTextEl.textContent.trim();
+                                            let questionMedia = wrapper.querySelector('[class*="questionImage"]');
+                                            let qMediaSrc = questionMedia ? questionMedia.src : "none";
 
-                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn =>
-                                                btn.innerHTML.includes('fa-check') ||
+                                            let questionMath = wrapper.querySelector('[class*="mq-selectable"]');
+                                            let qMathText = questionMath ? questionMath.innerText.trim() : "none";
+
+                                            const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
+
+                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn => 
+                                                btn.innerHTML.includes('fa-check') || 
                                                 (btn.style.backgroundColor && btn.style.backgroundColor.includes('rgb(139, 220, 111)')) ||
                                                 (btn.querySelector('[class*="answerFront"]') && btn.querySelector('[class*="answerFront"]').style.backgroundColor.includes('rgb(139, 220, 111)'))
                                             );
 
                                             if (correctBtn) {
-                                                const answerTextEl = correctBtn.querySelector('[class*="answerText"]');
-                                                if (answerTextEl) {
-                                                    const answer = answerTextEl.textContent.trim();
-                                                    if (!answerDatabase[question]) {
-                                                        answerDatabase[question] = [answer];
-                                                        console.log(`✓ Learned: "${question}" → "${answer}"`);
-                                                    }
+                                                const textEl = correctBtn.querySelector('[class*="answerText"]');
+                                                const mathEl = correctBtn.querySelector('[class*="mq-selectable"]');
+
+                                                const answer = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : null);
+
+                                                if (answer && !window.answerDatabase[question]) {
+                                                    window.answerDatabase[question] = [answer];
+                                                    console.log(`✓ Learned: "${question}" → "${answer}"`);
                                                 }
                                             }
 
@@ -1478,8 +1473,8 @@ button,
 
                                             if (realTypingAnswers.length > 0) {
                                                 const answer = realTypingAnswers[0].textContent.trim();
-                                                if (!answerDatabase[question]) {
-                                                    answerDatabase[question] = [answer];
+                                                if (!window.answerDatabase[question]) {
+                                                    window.answerDatabase[question] = [answer];
                                                     console.log(`✓ Learned: "${question}" → "${answer}"`);
                                                 }
                                             }
@@ -1496,29 +1491,28 @@ button,
                                         const questionTextEl = activeWrapper.querySelector('[class*="questionText"]');
                                         if (!questionTextEl) return;
 
-                                        const question = questionTextEl.textContent.trim();
+                                        let questionMedia = activeWrapper.querySelector('[class*="questionImage"]');
+                                        let qMediaSrc = questionMedia ? questionMedia.src : "none";
+                                        let questionMath = activeWrapper.querySelector('[class*="mq-selectable"]');
+                                        let qMathText = questionMath ? questionMath.innerText.trim() : "none";
 
-                                        if (answerDatabase[question]) {
-                                            const knownAnswer = answerDatabase[question][0];
+                                        const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
+
+                                        if (window.answerDatabase[question]) {
+                                            const knownAnswer = window.answerDatabase[question][0];
 
                                             const buttons = activeWrapper.querySelectorAll('[class*="answerButton"]');
                                             if (buttons.length > 0) {
                                                 buttons.forEach(btn => {
                                                     const textEl = btn.querySelector('[class*="answerText"]');
-                                                    if (!textEl) return;
-
-                                                    const text = textEl.textContent.trim();
+                                                    const mathEl = btn.querySelector('[class*="mq-selectable"]');
+                                                    const btnText = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : "");
+                                                    
                                                     const back = btn.querySelector('[class*="answerBack"]');
-
-                                                    if (back) {
-                                                        if (text === knownAnswer) {
-
-                                                            back.style.display = 'none';
-
-                                                        } else {
-
-                                                            back.style.display = '';
-                                                        }
+                                                    
+                                                    if (back && btnText === knownAnswer) {
+                                                        const currentColor = window.getComputedStyle(back).backgroundColor;
+                                                        back.style.backgroundColor = lightenColor(currentColor);
                                                     }
                                                 });
                                             }
@@ -2265,7 +2259,7 @@ button,
                             })();
                         }
                     }, {
-                        name: "Crash Game",
+                        name: "Crash Game (Gold Quest, Crypto, Frenzy)",
                         description: "Crashes the host's game",
                         run: function() {
                             var e = Object.values(function e(t = document.querySelector("#app")) {
@@ -2276,6 +2270,15 @@ button,
                                 path: `c/${e.props.client.name}/b/toString`,
                                 val: "Crashed"
                             })
+                        }
+                    },{
+                        name: "Crash Game (all modes except Gold Quest, Crypto and Frenzy)",
+                        description: "Crashes the host's game. Works only on the extension.",
+                        run: function() {
+                            chrome.runtime.sendMessage({ type: "CRASH_GAME" }, (response) => {
+                                console.log("Content script injected:", response);
+                            });
+
                         }
                     }, {
 
