@@ -2275,9 +2275,7 @@ button,
                         name: "Crash Game (all modes except Gold Quest, Crypto and Frenzy)",
                         description: "Crashes the host's game. Works only on the extension.",
                         run: function() {
-                            chrome.runtime.sendMessage({ type: "CRASH_GAME" }, (response) => {
-                                console.log("Content script injected:", response);
-                            });
+                            crashGameE();
 
                         }
                     }, {
