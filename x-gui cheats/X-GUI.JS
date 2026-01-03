@@ -11396,7 +11396,7 @@ button,
 
         creditLinks.append(createCredit("Our Github", '<a target="_blank" href="https://github.com/XULL-XXX/X-GUI-BLOOKET-CLIENT">X-GUI CHEATS/GITHUB</a>'));
         creditLinks.append(createCredit("Our Website", '<a target="_blank" href="https://xgui-client.github.io">More Info/Website</a>'));
-        creditLinks.append(createCredit("Discord", '<a target="_blank" href="https://discord.gg/Zk5a4QXN">JOIN THE SERVER</a>'));
+        creditLinks.append(createCredit("Discord", '<a target="_blank" href="https://discord.gg/nyaRdE4CeT">JOIN THE SERVER</a>'));
 
         function parseTime(d) {
             const hour = d.getHours() % 12 == 0 ? 12 : d.getHours() % 12;
