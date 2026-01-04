@@ -30,7 +30,13 @@
 /**
  * @license AGPL-3.0
  * Blooket Cheats
- * Copyright (C) 2023-present 05Konz/Xullys/redhorse26
+ * Copyright (C) 2023–present 05Konz
+ * Copyright (C) 2023–present Xullys
+ * Copyright (C) 2023–present redhorse26
+ * Copyright (C) 2023–present landsedge
+ * Copyright (C) 2023–present CatHead
+ * Copyright (C) 2023–present Lil_Skittle_
+
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
@@ -44,8 +50,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Source: https://github.com/Blooket-Council/Blooket-Cheats * EMAIL: 05konz994@gmail.com
- * Source: https://greasyfork.org/en/scripts/553301/versions/new * EMAIL slinkingfox@outlook.com
+ * Source: TAKEN DOWN * EMAIL: 05konz994@gmail.com
+ * Source: https://github.com/xgui-client/X-GUI-BLOOKET-CLIENT/ * EMAIL slinkingfox@outlook.com
+ * Discord: https://discord.gg/pzpXUUkv
 
 */
 
