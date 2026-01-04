@@ -1113,7 +1113,7 @@ button,
                                     function autoContinue() {
                                         const feedbackContainer = document.querySelector('[class*="feedbackContainer"]');
                                         const feedbackText = document.querySelector('[class*="feedbackText"]');
-                                        const isFeedback = feedbackContainer || (feedbackText && feedbackText.offsetParent !== null); 
+                                        const isFeedback = feedbackContainer || (feedbackText && feedbackText.offsetParent !== null);
 
                                         if (isFeedback) {
                                             if (feedbackContainer) feedbackContainer.click();
@@ -1141,8 +1141,8 @@ button,
 
                                             const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
 
-                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn => 
-                                                btn.innerHTML.includes('fa-check') || 
+                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn =>
+                                                btn.innerHTML.includes('fa-check') ||
                                                 (btn.style.backgroundColor && btn.style.backgroundColor.includes('rgb(139, 220, 111)')) ||
                                                 (btn.querySelector('[class*="answerFront"]') && btn.querySelector('[class*="answerFront"]').style.backgroundColor.includes('rgb(139, 220, 111)'))
                                             );
@@ -1250,7 +1250,7 @@ button,
                                 this.enabled = true;
                                 (() => {
                                     console.log("🎨 Highlight Answers Active (Green = Correct, Red = Wrong)\n");
-                                    
+
                                     if (!window.answerDatabase) {
                                         window.answerDatabase = {};
                                     }
@@ -1258,8 +1258,8 @@ button,
                                     function autoContinue() {
                                         const feedbackContainer = document.querySelector('[class*="feedbackContainer"]');
                                         const feedbackText = document.querySelector('[class*="feedbackText"]');
-                                        
-                                        const isFeedback = feedbackContainer || 
+
+                                        const isFeedback = feedbackContainer ||
                                                         (feedbackText && feedbackText.offsetParent !== null);
 
                                         if (isFeedback) {
@@ -1268,7 +1268,7 @@ button,
                                             } else {
                                                 document.body.click();
                                             }
-                                            
+
                                             const event = new KeyboardEvent('keydown', {
                                                 key: 'Enter',
                                                 code: 'Enter',
@@ -1282,7 +1282,7 @@ button,
 
                                     function learn() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
-                                        
+
                                         wrappers.forEach(wrapper => {
                                             const questionTextEl = wrapper.querySelector('[class*="questionText"]');
                                             if (!questionTextEl) return;
@@ -1295,8 +1295,8 @@ button,
 
                                             const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
 
-                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn => 
-                                                btn.innerHTML.includes('fa-check') || 
+                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn =>
+                                                btn.innerHTML.includes('fa-check') ||
                                                 (btn.style.backgroundColor && btn.style.backgroundColor.includes('rgb(139, 220, 111)')) ||
                                                 (btn.querySelector('[class*="answerFront"]') && btn.querySelector('[class*="answerFront"]').style.backgroundColor.includes('rgb(139, 220, 111)'))
                                             );
@@ -1334,7 +1334,7 @@ button,
                                         if (wrappers.length === 0) return;
 
                                         const activeWrapper = wrappers[wrappers.length - 1];
-                                        
+
                                         if (activeWrapper.className.includes('slideOut')) return;
 
                                         const questionTextEl = activeWrapper.querySelector('[class*="questionText"]');
@@ -1356,10 +1356,10 @@ button,
                                                     const textEl = btn.querySelector('[class*="answerText"]');
                                                     const mathEl = btn.querySelector('[class*="mq-selectable"]');
                                                     const btnText = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : "");
-                                                    
+
                                                     const front = btn.querySelector('[class*="answerFront"]');
                                                     const back = btn.querySelector('[class*="answerBack"]');
-                                                    
+
                                                     const correctColor = '#00ff00';
                                                     const wrongColor = '#ff0000';
 
@@ -1382,7 +1382,7 @@ button,
                                             const input = activeWrapper.querySelector('input[class*="typingAnswerInput"]');
                                             if (input) {
                                                 input.setAttribute('placeholder', `ANSWER: ${knownAnswer}`);
-                                                
+
                                                 const subHeader = activeWrapper.querySelector('[class*="typingAnswerSubheader"]');
                                                 if (subHeader) {
                                                     subHeader.textContent = `ANSWER: ${knownAnswer}`;
@@ -1420,7 +1420,7 @@ button,
                                 this.enabled = true;
                                 (() => {
                                     console.log("🕵️ Subtle Highlight Active (Lighter Shadow = Correct)\n");
-                                    
+
                                     if (!window.answerDatabase) {
                                         window.answerDatabase = {};
                                     }
@@ -1428,19 +1428,19 @@ button,
                                     function lightenColor(color) {
                                         const rgb = color.match(/\d+/g);
                                         if (!rgb) return color;
-                                        
+
                                         const r = Math.round(parseInt(rgb[0]) + (255 - parseInt(rgb[0])) * 0.1);
                                         const g = Math.round(parseInt(rgb[1]) + (255 - parseInt(rgb[1])) * 0.1);
                                         const b = Math.round(parseInt(rgb[2]) + (255 - parseInt(rgb[2])) * 0.1);
-                                        
+
                                         return `rgb(${r}, ${g}, ${b})`;
                                     }
 
                                     function autoContinue() {
                                         const feedbackContainer = document.querySelector('[class*="feedbackContainer"]');
                                         const feedbackText = document.querySelector('[class*="feedbackText"]');
-                                        
-                                        const isFeedback = feedbackContainer || 
+
+                                        const isFeedback = feedbackContainer ||
                                                         (feedbackText && feedbackText.offsetParent !== null);
 
                                         if (isFeedback) {
@@ -1449,7 +1449,7 @@ button,
                                             } else {
                                                 document.body.click();
                                             }
-                                            
+
                                             const event = new KeyboardEvent('keydown', {
                                                 key: 'Enter',
                                                 code: 'Enter',
@@ -1463,7 +1463,7 @@ button,
 
                                     function learn() {
                                         const wrappers = document.querySelectorAll('[class*="questionWrapper"]');
-                                        
+
                                         wrappers.forEach(wrapper => {
                                             const questionTextEl = wrapper.querySelector('[class*="questionText"]');
                                             if (!questionTextEl) return;
@@ -1476,8 +1476,8 @@ button,
 
                                             const question = questionTextEl.textContent.trim() + " " + qMediaSrc + " " + qMathText;
 
-                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn => 
-                                                btn.innerHTML.includes('fa-check') || 
+                                            const correctBtn = Array.from(wrapper.querySelectorAll('[class*="answerButton"]')).find(btn =>
+                                                btn.innerHTML.includes('fa-check') ||
                                                 (btn.style.backgroundColor && btn.style.backgroundColor.includes('rgb(139, 220, 111)')) ||
                                                 (btn.querySelector('[class*="answerFront"]') && btn.querySelector('[class*="answerFront"]').style.backgroundColor.includes('rgb(139, 220, 111)'))
                                             );
@@ -1536,9 +1536,9 @@ button,
                                                     const textEl = btn.querySelector('[class*="answerText"]');
                                                     const mathEl = btn.querySelector('[class*="mq-selectable"]');
                                                     const btnText = textEl ? textEl.textContent.trim() : (mathEl ? mathEl.innerText.trim() : "");
-                                                    
+
                                                     const back = btn.querySelector('[class*="answerBack"]');
-                                                    
+
                                                     if (back && btnText === knownAnswer) {
                                                         const currentColor = window.getComputedStyle(back).backgroundColor;
                                                         back.style.backgroundColor = lightenColor(currentColor);
@@ -2339,7 +2339,7 @@ button,
         }
     }
 },
-            
+
  {
 
 
@@ -7556,11 +7556,11 @@ button,
                                     if (node.memoizedState) {
                                         let hook = node.memoizedState;
                                         let index = 0;
-                                        
+
                                         while(hook) {
                                             if (index === 1) {
                                                 const val = hook.memoizedState;
-                                                
+
                                                 if (val && typeof val === 'object' && val.toast && val.toast.prices) {
                                                     const newDefs = { ...val };
                                                     const items = Object.keys(newDefs);
@@ -7571,7 +7571,7 @@ button,
                                                             const cheapPrices = new Array(item.prices.length).fill(1);
                                                             const insaneProfits = new Array(item.profits.length).fill(9e99);
                                                             insaneProfits[0] = 0; // Keep lvl 0 safe
-                                                            
+
                                                             newDefs[key] = {
                                                                 ...item,
                                                                 prices: cheapPrices,
@@ -7596,7 +7596,7 @@ button,
                                 }
 
                                 traverse(root[rKey]);
-                                
+
                                 if (!success) console.log("❌ Failed to find definitions hook.");
                             })();
                         }
@@ -10319,7 +10319,7 @@ button,
                 } catch (err) {
                     Logs.addLog(`Error running "${cheat.name}": ${err.message}`, "var(--error)");
                     if (areSweetAlertsEnabled()) {
-                        Swal.fire({title:'Cheat Error',text:`An error occurred while running ${cheat.name} make sure you are on the right page!`,icon:'error',toast:true,position:'bottom',timer:3000,timerProgressBar:true,showConfirmButton:false,background:'#151534',color:'#ffffff',iconColor:'#ff0000'});               
+                        Swal.fire({title:'Cheat Error',text:`An error occurred while running ${cheat.name} make sure you are on the right page!`,icon:'error',toast:true,position:'bottom',timer:3000,timerProgressBar:true,showConfirmButton:false,background:'#151534',color:'#ffffff',iconColor:'#ff0000'});
                     }
                 }
             };
@@ -10333,7 +10333,7 @@ button,
                 const unsupportedModes = ["racing", "royale", "dino", "rush"]; // <-- Unsuported Gamemodes go here
                 if (unsupportedModes.includes(mode)) {
                     path.push(cheats[mode].name, cheatsPage);
-                    
+
                     try {
                         if (cheatsPage && cheatsPage.style) {
                             let blurTarget = cheatsPage.querySelector && cheatsPage.querySelector('.xgui-blur-target');
@@ -10383,7 +10383,7 @@ button,
                         -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
                         background: linear-gradient(145deg, rgba(138, 43, 226, 0.15), rgba(75, 0, 130, 0.1)) !important;
                         border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
-                        box-shadow: 
+                        box-shadow:
                             0 10px 40px rgba(0, 0, 0, 0.5),
                             0 0 0 1px rgba(255, 255, 255, 0.08) inset,
                             0 25px 70px rgba(138, 43, 226, 0.2) !important;
@@ -10438,7 +10438,7 @@ button,
                     `;
 
                     const discordButton = document.createElement("a");
-                    discordButton.href = "https://discord.gg/nyaRdE4CeT"; 
+                    discordButton.href = "https://discord.gg/A7CRUz8vFR";
                     discordButton.target = "_blank";
                     discordButton.innerHTML = `
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -11415,7 +11415,7 @@ button,
 
         creditLinks.append(createCredit("Our Github", '<a target="_blank" href="https://github.com/XULL-XXX/X-GUI-BLOOKET-CLIENT">X-GUI CHEATS/GITHUB</a>'));
         creditLinks.append(createCredit("Our Website", '<a target="_blank" href="https://xgui-client.github.io">More Info/Website</a>'));
-        creditLinks.append(createCredit("Discord", '<a target="_blank" href="https://discord.gg/nyaRdE4CeT">JOIN THE SERVER</a>'));
+        creditLinks.append(createCredit("Discord", '<a target="_blank" href="https://discord.gg/A7CRUz8vFR">JOIN THE SERVER</a>'));
 
         function parseTime(d) {
             const hour = d.getHours() % 12 == 0 ? 12 : d.getHours() % 12;
