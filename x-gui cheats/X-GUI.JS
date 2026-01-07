@@ -1856,7 +1856,7 @@ button,
     console.log("Folders unlocked!");
 
                         },
-                    },
+                    },{
 
 
                         name: "Simulate Unlock",
