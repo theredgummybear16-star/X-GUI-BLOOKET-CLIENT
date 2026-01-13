@@ -1,4 +1,4 @@
-# 🚀 X-GUI Blooket Client
+# 🚀 X-GUI Blooket Client (mirror use the real versio in the github)
 # VERSION 6.70x HAS BEEN RELEASED <HUGE UPDATE!>
 [![Docs](https://img.shields.io/badge/Docs-X--GUI-1f6feb?style=for-the-badge&logo=google-chrome&logoColor=white)](https://dsmg.gitbook.io/x-gui-docs)
 [![Website](https://img.shields.io/badge/Website-X--GUI-1f6feb?style=for-the-badge&logo=google-chrome&logoColor=white)](https://xgui-client.github.io)
